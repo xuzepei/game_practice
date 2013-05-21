@@ -10,8 +10,7 @@
 #import "RCGameLayer.h"
 #import "RCUserInterfaceLayer.h"
 
-#define GAME_LAYER_TAG 100
-#define USERINTERFACE_LAYER_TAG 101
+static id g_multiLayerSceneSharedInstance = nil;
 
 @implementation RCMultiLayerScene
 
@@ -26,20 +25,7 @@
 
 + (id)sharedInstance
 {
-    static id sharedInstance = nil;
-
-    if(nil == sharedInstance)
-    {
-        @synchronized([RCMultiLayerScene class])
-        {
-            if(nil == sharedInstance)
-            {
-                sharedInstance = [RCMultiLayerScene scene];
-            }
-        }
-    }
-    
-    return sharedInstance;
+    return g_multiLayerSceneSharedInstance;
 }
 
 + (CGPoint)locationFromTouch:(UITouch*)touch
@@ -57,14 +43,16 @@
 {
     if(self = [super init])
     {
-//        CCLayerColor* colorLayer = [CCLayerColor layerWithColor:ccc4(255, 0, 255, 255)];
-//		[self addChild:colorLayer z:0];
+        g_multiLayerSceneSharedInstance = self;
+        
+        CCLayerColor* colorLayer = [CCLayerColor layerWithColor:ccc4(255, 0, 255, 255)];
+		[self addChild:colorLayer z:0 tag:LT_BG];
         
         RCGameLayer* gameLayer = [RCGameLayer node];
-        [self addChild:gameLayer z:1 tag:GAME_LAYER_TAG];
+        [self addChild:gameLayer z:1 tag:LT_GAME];
         
         RCUserInterfaceLayer* uiLayer = [RCUserInterfaceLayer node];
-        [self addChild:uiLayer z:2 tag:USERINTERFACE_LAYER_TAG];
+        [self addChild:uiLayer z:2 tag:LT_USERINTERFACE];
     }
     
     return self;
@@ -72,12 +60,13 @@
 
 - (void)dealloc
 {
+    g_multiLayerSceneSharedInstance = nil;
     [super dealloc];
 }
 
 - (RCGameLayer*)gameLayer
 {
-    CCNode* layer = [self getChildByTag:GAME_LAYER_TAG];
+    CCNode* layer = [self getChildByTag:LT_GAME];
     if([layer isKindOfClass:[RCGameLayer class]])
         return (RCGameLayer*)layer;
     
@@ -86,7 +75,7 @@
 
 - (RCUserInterfaceLayer*)uiLayer
 {
-    CCNode* layer = [self getChildByTag:USERINTERFACE_LAYER_TAG];
+    CCNode* layer = [self getChildByTag:LT_USERINTERFACE];
     if([layer isKindOfClass:[RCUserInterfaceLayer class]])
         return (RCUserInterfaceLayer*)layer;
     

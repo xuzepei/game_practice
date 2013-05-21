@@ -9,20 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
 
-typedef enum
-{
-	ActionTagGameLayerMovesBack,
-	ActionTagGameLayerRotates,
-} MultiLayerSceneActionTags;
+@class RCGameLayer;
+@class RCUserInterfaceLayer;
 
 @interface RCMultiLayerScene : CCLayer {
     
 }
 
-
 + (id)scene;
 + (id)sharedInstance;
 + (CGPoint)locationFromTouch:(UITouch*)touch;
 + (CGPoint)locationFromTouches:(NSSet *)touches;
+
+- (RCGameLayer*)gameLayer;
+- (RCUserInterfaceLayer*)uiLayer;
 
 @end

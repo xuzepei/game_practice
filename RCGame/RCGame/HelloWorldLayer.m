@@ -9,13 +9,16 @@
 
 // Import the interfaces
 #import "HelloWorldLayer.h"
-
-// Needed to obtain the Navigation Controller
 #import "AppDelegate.h"
+#import "RCMenuItemFont.h"
 
-#pragma mark - HelloWorldLayer
+#define HELLOW_WORLD_TAG 200
+#define SPRITE_FIRE_TAG 201
 
-#define HELLOW_WORLD_TAG 100
+enum {
+    ACTION_EASE = 100,
+
+    };
 
 // HelloWorldLayer implementation
 @implementation HelloWorldLayer
@@ -48,10 +51,10 @@
 		
 		// create and initialize a Label
 		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Hello World" fontName:@"Marker Felt" fontSize:64];
-
+        
 		// ask director for the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
-	
+        
 		// position the label on the center of the screen
 		label.position =  ccp( size.width /2 , size.height/2 );
         
@@ -60,7 +63,23 @@
 		// add the label as a child to this Layer
 		[self addChild: label];
 		
-		
+		//显示精灵
+        CCSprite* sprite = [CCSprite spriteWithFile:@"fire@2x.png"];
+        sprite.tag = SPRITE_FIRE_TAG;
+        sprite.anchorPoint = CGPointMake(0, 0); //默认锚点为0.5,0.5
+        [self addChild:sprite];
+        
+        
+        //进行行动按钮
+        CGFloat fontSize = 16;
+        CCLabelTTF *actionlabel = [CCLabelTTF labelWithString:@"EASE_ACTION" fontName:@"Helvetica-Bold" fontSize:fontSize];
+        CCMenuItem *actionMenuItem = [CCMenuItemLabel itemWithLabel:actionlabel target:self selector:@selector(clickedActionButton:)];
+        actionMenuItem.anchorPoint = CGPointMake(0, 1);
+        actionMenuItem.tag = ACTION_EASE;
+        CCMenu *actionMenu = [CCMenu menuWithItems:actionMenuItem, nil];
+        actionMenu.position = ccp(0, size.height - fontSize);
+        [self addChild:actionMenu];
+        
 		
 		//
 		// Leaderboards and Achievements
@@ -83,7 +102,7 @@
 			[achivementViewController release];
 		}
 									   ];
-
+        
 		// Leaderboard Menu Item using blocks
 		CCMenuItem *itemLeaderboard = [CCMenuItemFont itemWithString:@"Leaderboard" block:^(id sender) {
 			
@@ -106,7 +125,7 @@
 		
 		// Add the menu to the layer
 		[self addChild:menu];
-
+        
 	}
 	return self;
 }
@@ -144,6 +163,49 @@
     NSAssert([node isKindOfClass:[CCLabelTTF class]], @"node is not a CCLabelTTF!");
     CCLabelTTF* label = (CCLabelTTF*)node;
     label.scale = CCRANDOM_0_1();
+}
+
+#pragma mark - Action Practice
+
+- (void)clickedActionButton:(id)sender
+{
+    CCLOG(@"clickedActionButton");
+    CCMenuItem* item = (CCMenuItem*)sender;
+    if(ACTION_EASE == item.tag)
+    {
+        CCSprite* node = (CCSprite*)[self getChildByTag:SPRITE_FIRE_TAG];
+        if(node)
+        {
+            CGSize size = [[CCDirector sharedDirector] winSize];
+            
+            node.position = ccp(size.width/2.0, size.height/2.0);
+            
+
+            CGPoint point = ccp(size.width - node.contentSize.width, size.height- node.contentSize.height);
+            CCMoveTo* move = [CCMoveTo actionWithDuration:5 position:point];
+            
+            //淡入淡出
+            CCEaseInOut* ease = [CCEaseInOut actionWithAction:move rate:4];
+            
+            //先回，再向前
+//            CCEaseBackInOut* ease = [CCEaseBackInOut actionWithAction:move];            
+            
+            //弹力球效果
+//            CCEaseBounceInOut* ease = [CCEaseBounceInOut actionWithAction:move];
+            
+            //橡皮筋效果
+//            CCEaseElasticInOut* ease = [CCEaseElasticInOut actionWithAction:move];
+            
+            //指数效果
+//            CCEaseExponentialInOut* ease = [CCEaseExponentialInOut actionWithAction:move];
+            
+            //正弦效果
+//            CCEaseSineInOut* ease = [CCEaseSineInOut actionWithAction:move];
+            
+            [node runAction:ease];
+        }
+    }
+    
 }
 
 @end

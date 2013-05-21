@@ -9,10 +9,12 @@
 #import "cocos2d.h"
 
 #import "AppDelegate.h"
-#import "IntroLayer.h"
+#import "RCLoadingLayer.h"
 #import "HelloWorldLayer.h"
 #import "RCGameScene.h"
 #import "RCMultiLayerScene.h"
+#import "RCEarthLayer.h"
+#import "RCEarthScene.h"
 
 @implementation AppController
 
@@ -55,7 +57,10 @@
 	// Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
 	if( ! [director_ enableRetinaDisplay:YES] )
 		CCLOG(@"Retina Display Not supported");
-
+    
+    //[director_ enableRetinaDisplay:NO];
+    
+    //[director_ enableRetinaDisplay:NO];
 	// Default texture format for PNG/BMP/TIFF/JPEG/GIF images
 	// It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
 	// You can change anytime.
@@ -66,25 +71,15 @@
 	// On iPad     : "-ipad", "-hd"
 	// On iPhone HD: "-hd"
 	CCFileUtils *sharedFileUtils = [CCFileUtils sharedFileUtils];
-	[sharedFileUtils setEnableFallbackSuffixes:NO];				// Default: NO. No fallback suffixes are going to be used
-	[sharedFileUtils setiPhoneRetinaDisplaySuffix:@"-hd"];		// Default on iPhone RetinaDisplay is "-hd"
+	[sharedFileUtils setEnableFallbackSuffixes:YES];				// Default: NO. No fallback suffixes are going to be used
+	[sharedFileUtils setiPhoneRetinaDisplaySuffix:@"@2x"];		// Default on iPhone RetinaDisplay is "-hd"
 	[sharedFileUtils setiPadSuffix:@"-ipad"];					// Default on iPad is "ipad"
 	[sharedFileUtils setiPadRetinaDisplaySuffix:@"-ipadhd"];	// Default on iPad RetinaDisplay is "-ipadhd"
 
 	// Assume that PVR images have premultiplied alpha
 	[CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
 
-
-    //Hello World
-	//[director_ pushScene: [IntroLayer scene]];
-    
-    //DoodleDrop Game
-    //[director_ runWithScene:[RCGameScene scene]];
-    
-    //RCMultiLayerScene
-    [director_ runWithScene:[RCMultiLayerScene sharedInstance]];
-    
-    
+//    [self initEarthViewController];
 	// Create a Navigation Controller with the Director
 	navController_ = [[UINavigationController alloc] initWithRootViewController:director_];
 	navController_.navigationBarHidden = YES;
@@ -95,6 +90,36 @@
 	
 	// make main window visible
 	[window_ makeKeyAndVisible];
+    
+    
+    //Hello World
+	//[director_ runWithScene: [RCLoadingLayer goToScene:ST_HELLOWORLD]];
+    
+    //Shoot Game 投掷飞镖动作
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_SHOOTGAME]];
+    
+    //Bear Game
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_BEARGAME]];
+    
+    //Drag Game
+    [director_ runWithScene:[RCLoadingLayer goToScene:ST_DRAGGAME]]
+    
+    //DoodleDrop Game
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_DOODLEDROP]];
+    
+    //RCMultiLayerScene
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_MULTILAYER]];
+    
+    //Earth
+//    CC3Layer* earthLayer = [RCEarthLayer node];
+//    earthLayer.cc3Scene = [RCEarthScene scene];
+//    [self.earthViewController runSceneOnNode: earthLayer];
+    
+    //RCParallaxScene
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_PARALLAX]];
+    
+    //RCShipGameScene
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_SHIPGAMESCENE]];
 	
 	return YES;
 }
@@ -141,6 +166,7 @@
 // purge memory
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
+    //处理内存警告
     [[CCTextureCache sharedTextureCache] removeUnusedTextures];
     
 	[[CCDirector sharedDirector] purgeCachedData];
@@ -154,10 +180,29 @@
 
 - (void) dealloc
 {
+    self.earthViewController = nil;
+    
 	[window_ release];
 	[navController_ release];
 
 	[super dealloc];
 }
+
+#pragma mark Earth View Controller
+
+- (void)initEarthViewController
+{
+    if(nil == _earthViewController)
+    {
+        _earthViewController = CC3DeviceCameraOverlayUIViewController.sharedDirector;
+        _earthViewController.supportedInterfaceOrientations = UIInterfaceOrientationMaskAll;
+        _earthViewController.viewShouldUseStencilBuffer = NO;		// Set to YES if using shadow volumes
+        _earthViewController.viewPixelSamples = 1;					// Set to 4 for antialiasing multisampling
+        _earthViewController.animationInterval = (1.0f / 60);
+        _earthViewController.displayStats = YES;
+        [_earthViewController enableRetinaDisplay: YES];
+    }
+}
+
 @end
 

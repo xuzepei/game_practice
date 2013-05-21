@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "cocos2d.h"
+#import "CC3UIViewController.h"
 
 @interface AppController : NSObject <UIApplicationDelegate, CCDirectorDelegate>
 {
@@ -20,5 +20,6 @@
 @property (nonatomic, retain) UIWindow *window;
 @property (readonly) UINavigationController *navController;
 @property (readonly) CCDirectorIOS *director;
+@property (nonatomic,retain)CC3DeviceCameraOverlayUIViewController* earthViewController;
 
 @end

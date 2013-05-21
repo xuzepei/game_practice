@@ -11,6 +11,7 @@
 
 #define PLAYER_TAG 100
 #define SPIDER_TAG 101
+#define PLAYER_NAME_TAG 102
 
 @implementation RCGameScene
 
@@ -30,13 +31,19 @@
         LOG_HERE;
         
         self.isAccelerometerEnabled = YES;
-        
-        player = [CCSprite spriteWithFile:@"alien.png"];
-        [self addChild:player z:0 tag:PLAYER_TAG];
-        
         CGSize screenSize = [[CCDirector sharedDirector] winSize];
-        float imageHeight = [player texture].contentSize.height;
+        
+        player = [CCSprite spriteWithFile:@"alien@2x.png"];
+        float imageWidth = player.contentSize.width;
+        float imageHeight = player.contentSize.height;
         player.position = ccp(screenSize.width/2.0, imageHeight/2.0);
+        [self addChild:player z:0 tag:PLAYER_TAG];
+ 
+        
+        CCLabelTTF* nameLabel = [CCLabelTTF labelWithString:@"OHanzi" fontName:@"Helvetica" fontSize:12];
+        nameLabel.position = ccp(imageWidth/2.0, imageHeight + 10);
+        [player addChild:nameLabel z:0 tag:PLAYER_NAME_TAG];
+//        [nameLabel runAction:[CCFollow actionWithTarget:player]];
         
         [[SimpleAudioEngine sharedEngine] playBackgroundMusic:@"blues.mp3" loop:YES];
         
@@ -60,11 +67,11 @@
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {    
-    //CGFloat deceleration = 0.4f;
-    CGFloat sensitivity = 6.0f;
+    CGFloat deceleration = 0.4f; //该变量越大使得方向改变越困难
+    CGFloat sensitivity = 6.0f;//该变量越大使得移动越大
     CGFloat maxVelocity = 100;
     
-    playerVelocity.x = /*playerVelocity.x * deceleration +*/acceleration.x * sensitivity;
+    playerVelocity.x = playerVelocity.x * deceleration +acceleration.x * sensitivity;
     
     if(playerVelocity.x > maxVelocity)
     {
@@ -74,6 +81,17 @@
     {
         playerVelocity.x = -1 * maxVelocity;
     }
+    
+    playerVelocity.y = playerVelocity.y * deceleration +acceleration.y * sensitivity;
+    
+    if(playerVelocity.y > maxVelocity)
+    {
+        playerVelocity.y = maxVelocity;
+    }
+    else if(playerVelocity.y < -1 * maxVelocity)
+    {
+        playerVelocity.y = -1 * maxVelocity;
+    }
 }
 
 - (void)update:(ccTime)delta
@@ -82,28 +100,43 @@
     if(score < totalTime)
     {
         score = totalTime;
-        if(scoreLabel)
-            [scoreLabel setString:[NSString stringWithFormat:@"%i", score]];
     }
     
+    if(scoreLabel)
+        [scoreLabel setString:[NSString stringWithFormat:@"第 %d 波", numSpidersMoved/8 + 1]];
     
     CGPoint pos = player.position;
     pos.x += playerVelocity.x;
+    pos.y += playerVelocity.y;
     
     CGSize screenSize = [[CCDirector sharedDirector] winSize];
     float imageWidth = [player texture].contentSize.width;
     float leftBorderLimit = imageWidth/2.0;
     float rightBorderLimit = screenSize.width - imageWidth/2.0;
     
+    float topBorderLimit = screenSize.height - imageWidth/2.0;
+    float bottomBorderLimit = imageWidth/2.0;
+    
     if(pos.x < leftBorderLimit)
     {
         pos.x = leftBorderLimit;
-        playerVelocity = CGPointZero;
+        playerVelocity.x = 0;
     }
     else if(pos.x > rightBorderLimit)
     {
         pos.x = rightBorderLimit;
-        playerVelocity = CGPointZero;
+        playerVelocity.x = 0;
+    }
+    
+    if(pos.y < bottomBorderLimit)
+    {
+        pos.y = bottomBorderLimit;
+        playerVelocity.y = 0;
+    }
+    else if(pos.x > topBorderLimit)
+    {
+        pos.x = topBorderLimit;
+        playerVelocity.y = 0;
     }
 
     player.position = pos;
@@ -114,7 +147,7 @@
 - (void)initSpiders
 {
     CGSize screenSize = [[CCDirector sharedDirector] winSize];
-    CCSprite* spider = [CCSprite spriteWithFile:@"spider.png"];
+    CCSprite* spider = [CCSprite spriteWithFile:@"spider@2x.png"];
     CGFloat imageWidth = [spider texture].contentSize.width;
     int spiderCount = screenSize.width / imageWidth;
     
@@ -123,7 +156,7 @@
         spiders = [[CCArray alloc] initWithCapacity:spiderCount];
         for(int i = 0; i < spiderCount; i++)
         {
-            CCSprite* spider = [CCSprite spriteWithFile:@"spider.png"];
+            CCSprite* spider = [CCSprite spriteWithFile:@"spider@2x.png"];
             [self addChild:spider z:0 tag:SPIDER_TAG];
             [spiders addObject:spider];
         }
@@ -171,9 +204,9 @@
 
 - (void)runSpiderMoveSequence:(CCSprite*)spider
 {
-    if(numSpidersMoved % 8 == 0 && spiderMoveDuration > 2.0f)
+    if(numSpidersMoved % 8 == 0 && spiderMoveDuration > 0.0f)
     {
-        spiderMoveDuration -= 0.1f;
+        spiderMoveDuration -= 0.2f;
     }
     
     CGPoint belowScreenPosition = CGPointMake(spider.position.x,-1 * [spider texture].contentSize.height);
@@ -196,6 +229,8 @@
     CGPoint pos = spider.position;
     CGSize screenSize = [[CCDirector sharedDirector] winSize];
     pos.y = screenSize.height + [spider texture].contentSize.height; spider.position = pos;
+    
+    numSpidersMoved++;
 }
 
 - (void)checkForCollision

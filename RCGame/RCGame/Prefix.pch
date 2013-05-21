@@ -16,3 +16,54 @@
 
 
 #define LOG_HERE CCLOG(@"%@: %@",NSStringFromSelector(_cmd),self)
+#define WIN_SIZE [[CCDirector sharedDirector] winSize]
+#define DIRECTOR [CCDirector sharedDirector]
+
+
+typedef enum
+{
+    ST_UNKNOWN = 0,
+    ST_HELLOWORLD,
+    ST_DOODLEDROP,
+    ST_MULTILAYER,
+    ST_EARTH,
+    ST_PARALLAX,
+    ST_SHIPGAMESCENE,
+    ST_SHOOTGAME,
+    ST_BEARGAME,
+    ST_DRAGGAME
+}SCENE_TYPE;
+
+typedef enum
+{
+    AT_UNKNOWN = 0,
+	AT_MOVEBACK,
+	AT_ROTATION,
+}ACTION_TAG;
+
+typedef enum{
+    LT_UNKNOWN = 0,
+    LT_BG,
+    LT_GAME,
+    LT_USERINTERFACE,
+    LT_TITLEBAR,
+}LAYER_TAG;
+
+typedef enum{
+    PNT_UNKNOWN = 0,
+    PNT_TAG1,
+    PNT_TAG2,
+}PARALLAX_NODE_TAG;
+
+typedef enum{
+    T_UNKNOWN = 0,
+    T1,
+    T2,
+    GameSceneNodeTagBulletSpriteBatch,
+    SHOOT_GAME_BG_TAG,
+    SG_TARGET_TAG,
+    SG_PROJECTILE_TAG,
+    SG_GAME_OVER_LABEL_TAG,
+    SG_GAME_OVER_BG_TAG,
+}TAG;
+

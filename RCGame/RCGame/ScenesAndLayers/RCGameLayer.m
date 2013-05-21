@@ -8,6 +8,7 @@
 
 #import "RCGameLayer.h"
 #import "RCMultiLayerScene.h"
+#import "Spider.h"
 
 @interface RCGameLayer(Private)
 - (void)addRandomThings;
@@ -23,13 +24,13 @@
         
 		self.gameLayerPosition = self.position;
         
-		CGSize screenSize = [[CCDirector sharedDirector] winSize];
-		
-		CCSprite* background = [CCSprite spriteWithFile:@"grass.png"];
+		CGSize screenSize = WIN_SIZE;
+
+		CCSprite* background = [CCSprite spriteWithFile:@"grass@2x.png"];
 		background.position = CGPointMake(screenSize.width/2.0, screenSize.height/2.0);
 		[self addChild:background];
 		
-		CCLabelTTF* label = [CCLabelTTF labelWithString:@"22222222" fontName:@"Marker Felt" fontSize:44];
+		CCLabelTTF* label = [CCLabelTTF labelWithString:@"GameLayer" fontName:@"Marker Felt" fontSize:44];
 		label.color = ccBLACK;
 		label.position = CGPointMake(screenSize.width / 2, screenSize.height / 2);
 		//label.anchorPoint = CGPointMake(0.5f, 1);
@@ -61,7 +62,7 @@
     
 	for (int i = 0; i < 4; i++)
 	{
-		CCSprite* firething = [CCSprite spriteWithFile:@"fire.png"];
+		CCSprite* firething = [CCSprite spriteWithFile:@"fire@2x.png"];
 		firething.position = CGPointMake(CCRANDOM_0_1() * screenSize.width, CCRANDOM_0_1() * screenSize.height);
 		[self addChild:firething];
 		[self runRandomMoveSequence:firething];
@@ -69,16 +70,20 @@
     
 	for (int i = 0; i < 10; i++)
 	{
-		CCSprite* spider = [CCSprite spriteWithFile:@"spider.png"];
-		spider.position = CGPointMake(CCRANDOM_0_1() * screenSize.width, CCRANDOM_0_1() * screenSize.height);
-		[self addChild:spider];
-		[self runRandomMoveSequence:spider];
+//		CCSprite* spider = [CCSprite spriteWithFile:@"spider@2x.png"];
+//		spider.position = CGPointMake(CCRANDOM_0_1() * screenSize.width, CCRANDOM_0_1() * screenSize.height);
+//		[self addChild:spider];
+//		[self runRandomMoveSequence:spider];
+        
+        [Spider spiderWithParentNode:self];
 	}
 }
 
 - (void)dealloc
 {
 	CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
+    
+	[[DIRECTOR touchDispatcher] removeDelegate:self];
 	
 	// don't forget to call "super dealloc"
 	[super dealloc];
@@ -86,8 +91,7 @@
 
 - (void)registerWithTouchDispatcher
 {
-    CCDirector *director = [CCDirector sharedDirector];
-	[[director touchDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
+	[[DIRECTOR touchDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
 }
 
 - (BOOL)ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
@@ -95,7 +99,7 @@
 	self.lastTouchLocation = [RCMultiLayerScene locationFromTouch:touch];
 	
 	// Stop the move action so it doesn't interfere with the user's scrolling.
-	[self stopActionByTag:ActionTagGameLayerMovesBack];
+	[self stopActionByTag:AT_MOVEBACK];
 	
 	// Always swallow touches, GameLayer is the last layer to receive touches.
 	return YES;
@@ -122,7 +126,7 @@
 	// Move the game layer back to its designated position.
 	CCMoveTo* move = [CCMoveTo actionWithDuration:1 position:self.gameLayerPosition];
 	CCEaseIn* ease = [CCEaseIn actionWithAction:move rate:0.5f];
-	ease.tag = ActionTagGameLayerMovesBack;
+	ease.tag = AT_MOVEBACK;
 	[self runAction:ease];
 }
 
