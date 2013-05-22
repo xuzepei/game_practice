@@ -72,7 +72,7 @@
 	// On iPhone HD: "-hd"
 	CCFileUtils *sharedFileUtils = [CCFileUtils sharedFileUtils];
 	[sharedFileUtils setEnableFallbackSuffixes:YES];				// Default: NO. No fallback suffixes are going to be used
-	[sharedFileUtils setiPhoneRetinaDisplaySuffix:@"@2x"];		// Default on iPhone RetinaDisplay is "-hd"
+	[sharedFileUtils setiPhoneRetinaDisplaySuffix:@"-hd"];		// Default on iPhone RetinaDisplay is "-hd"
 	[sharedFileUtils setiPadSuffix:@"-ipad"];					// Default on iPad is "ipad"
 	[sharedFileUtils setiPadRetinaDisplaySuffix:@"-ipadhd"];	// Default on iPad RetinaDisplay is "-ipadhd"
 
@@ -102,7 +102,10 @@
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_BEARGAME]];
     
     //Drag Game
-    [director_ runWithScene:[RCLoadingLayer goToScene:ST_DRAGGAME]]
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_DRAGGAME]];
+    
+    //Beat the mole
+    [director_ runWithScene:[RCLoadingLayer goToScene:ST_BEATTHEMOLE]];
     
     //DoodleDrop Game
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_DOODLEDROP]];

@@ -31,7 +31,8 @@ typedef enum
     ST_SHIPGAMESCENE,
     ST_SHOOTGAME,
     ST_BEARGAME,
-    ST_DRAGGAME
+    ST_DRAGGAME,
+    ST_BEATTHEMOLE
 }SCENE_TYPE;
 
 typedef enum

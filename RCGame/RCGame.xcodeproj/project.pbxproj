@@ -28,6 +28,7 @@
 		090E3B62174B6DAA000C65FE /* blue-shooting-stars.png in Resources */ = {isa = PBXBuildFile; fileRef = 090E3B5E174B6DAA000C65FE /* blue-shooting-stars.png */; };
 		090E3B63174B6DAA000C65FE /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = 090E3B5F174B6DAA000C65FE /* cat.png */; };
 		090E3B64174B6DAA000C65FE /* dog.png in Resources */ = {isa = PBXBuildFile; fileRef = 090E3B60174B6DAA000C65FE /* dog.png */; };
+		090E3B66174B73DC000C65FE /* turtle.png in Resources */ = {isa = PBXBuildFile; fileRef = 090E3B65174B73DC000C65FE /* turtle.png */; };
 		091377EB16ACE9010001D7D4 /* RCGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 091377EA16ACE9010001D7D4 /* RCGameScene.m */; };
 		091377F116ACF3370001D7D4 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 091377F016ACF3370001D7D4 /* Default@2x.png */; };
 		091377F316ACF3480001D7D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 091377F216ACF3480001D7D4 /* Default-568h@2x.png */; };
@@ -178,6 +179,9 @@
 		098BFC1E17338BE90024D052 /* ui-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 098BFC1B17338BE90024D052 /* ui-frame@2x.png */; };
 		098BFC2117338C0E0024D052 /* alien@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 098BFC1F17338C0E0024D052 /* alien@2x.png */; };
 		098BFC2217338C0E0024D052 /* spider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 098BFC2017338C0E0024D052 /* spider@2x.png */; };
+		09973E46174C6F5200AD1815 /* laugh.caf in Resources */ = {isa = PBXBuildFile; fileRef = 09973E43174C6F5200AD1815 /* laugh.caf */; };
+		09973E47174C6F5200AD1815 /* ow.caf in Resources */ = {isa = PBXBuildFile; fileRef = 09973E44174C6F5200AD1815 /* ow.caf */; };
+		09973E48174C6F5200AD1815 /* whack.caf in Resources */ = {isa = PBXBuildFile; fileRef = 09973E45174C6F5200AD1815 /* whack.caf */; };
 		09D388B017379940009348C3 /* Spider.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D388AF17379940009348C3 /* Spider.m */; };
 		09D9612017320FD800959BD1 /* Cal3D File Formats.txt in Resources */ = {isa = PBXBuildFile; fileRef = 09D9600D17320FD800959BD1 /* Cal3D File Formats.txt */; };
 		09D9612117320FD800959BD1 /* CC3CAFResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D9600F17320FD800959BD1 /* CC3CAFResource.m */; };
@@ -310,6 +314,13 @@
 		09D961A017320FD800959BD1 /* CC3SingleTextureWithAlphaTest.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 09D9611F17320FD800959BD1 /* CC3SingleTextureWithAlphaTest.fsh */; };
 		09D961A41732116200959BD1 /* earth.pod in Resources */ = {isa = PBXBuildFile; fileRef = 09D961A31732116200959BD1 /* earth.pod */; };
 		09D961A6173211C200959BD1 /* earth@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09D961A5173211C200959BD1 /* earth@2x.png */; };
+		09EBB221174BA1E800969F96 /* RCBeatTheMoleScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EBB220174BA1E800969F96 /* RCBeatTheMoleScene.m */; };
+		09EBB228174BA5C200969F96 /* bg_dirt.plist in Resources */ = {isa = PBXBuildFile; fileRef = 09EBB222174BA5C200969F96 /* bg_dirt.plist */; };
+		09EBB229174BA5C200969F96 /* bg_dirt.png in Resources */ = {isa = PBXBuildFile; fileRef = 09EBB223174BA5C200969F96 /* bg_dirt.png */; };
+		09EBB22A174BA5C200969F96 /* btm_grass.plist in Resources */ = {isa = PBXBuildFile; fileRef = 09EBB224174BA5C200969F96 /* btm_grass.plist */; };
+		09EBB22B174BA5C200969F96 /* btm_grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 09EBB225174BA5C200969F96 /* btm_grass.png */; };
+		09EBB22C174BA5C200969F96 /* mole.plist in Resources */ = {isa = PBXBuildFile; fileRef = 09EBB226174BA5C200969F96 /* mole.plist */; };
+		09EBB22D174BA5C200969F96 /* mole.png in Resources */ = {isa = PBXBuildFile; fileRef = 09EBB227174BA5C200969F96 /* mole.png */; };
 		09F942C1174B06F700CED4FC /* player.png in Resources */ = {isa = PBXBuildFile; fileRef = 09F942BE174B06F700CED4FC /* player.png */; };
 		09F942C2174B06F700CED4FC /* projectile.png in Resources */ = {isa = PBXBuildFile; fileRef = 09F942BF174B06F700CED4FC /* projectile.png */; };
 		09F942C3174B06F700CED4FC /* target.png in Resources */ = {isa = PBXBuildFile; fileRef = 09F942C0174B06F700CED4FC /* target.png */; };
@@ -365,6 +376,7 @@
 		090E3B5E174B6DAA000C65FE /* blue-shooting-stars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blue-shooting-stars.png"; path = "Resources/blue-shooting-stars.png"; sourceTree = "<group>"; };
 		090E3B5F174B6DAA000C65FE /* cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cat.png; path = Resources/cat.png; sourceTree = "<group>"; };
 		090E3B60174B6DAA000C65FE /* dog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dog.png; path = Resources/dog.png; sourceTree = "<group>"; };
+		090E3B65174B73DC000C65FE /* turtle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = turtle.png; path = Resources/turtle.png; sourceTree = "<group>"; };
 		091377E916ACE9010001D7D4 /* RCGameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCGameScene.h; sourceTree = "<group>"; };
 		091377EA16ACE9010001D7D4 /* RCGameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCGameScene.m; sourceTree = "<group>"; };
 		091377F016ACF3370001D7D4 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -659,6 +671,9 @@
 		098BFC1B17338BE90024D052 /* ui-frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ui-frame@2x.png"; path = "Resources/ui-frame@2x.png"; sourceTree = "<group>"; };
 		098BFC1F17338C0E0024D052 /* alien@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "alien@2x.png"; sourceTree = "<group>"; };
 		098BFC2017338C0E0024D052 /* spider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spider@2x.png"; sourceTree = "<group>"; };
+		09973E43174C6F5200AD1815 /* laugh.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = laugh.caf; sourceTree = "<group>"; };
+		09973E44174C6F5200AD1815 /* ow.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ow.caf; sourceTree = "<group>"; };
+		09973E45174C6F5200AD1815 /* whack.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whack.caf; sourceTree = "<group>"; };
 		09D388AE17379940009348C3 /* Spider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spider.h; sourceTree = "<group>"; };
 		09D388AF17379940009348C3 /* Spider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spider.m; sourceTree = "<group>"; };
 		09D9600D17320FD800959BD1 /* Cal3D File Formats.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Cal3D File Formats.txt"; sourceTree = "<group>"; };
@@ -917,6 +932,14 @@
 		09D9611F17320FD800959BD1 /* CC3SingleTextureWithAlphaTest.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CC3SingleTextureWithAlphaTest.fsh; sourceTree = "<group>"; };
 		09D961A31732116200959BD1 /* earth.pod */ = {isa = PBXFileReference; lastKnownFileType = file; name = earth.pod; path = Resources/earth.pod; sourceTree = "<group>"; };
 		09D961A5173211C200959BD1 /* earth@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "earth@2x.png"; path = "Resources/earth@2x.png"; sourceTree = "<group>"; };
+		09EBB21F174BA1E800969F96 /* RCBeatTheMoleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCBeatTheMoleScene.h; sourceTree = "<group>"; };
+		09EBB220174BA1E800969F96 /* RCBeatTheMoleScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCBeatTheMoleScene.m; sourceTree = "<group>"; };
+		09EBB222174BA5C200969F96 /* bg_dirt.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = bg_dirt.plist; path = Resources/bg_dirt.plist; sourceTree = "<group>"; };
+		09EBB223174BA5C200969F96 /* bg_dirt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg_dirt.png; path = Resources/bg_dirt.png; sourceTree = "<group>"; };
+		09EBB224174BA5C200969F96 /* btm_grass.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = btm_grass.plist; path = Resources/btm_grass.plist; sourceTree = "<group>"; };
+		09EBB225174BA5C200969F96 /* btm_grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btm_grass.png; path = Resources/btm_grass.png; sourceTree = "<group>"; };
+		09EBB226174BA5C200969F96 /* mole.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = mole.plist; path = Resources/mole.plist; sourceTree = "<group>"; };
+		09EBB227174BA5C200969F96 /* mole.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mole.png; path = Resources/mole.png; sourceTree = "<group>"; };
 		09F942BE174B06F700CED4FC /* player.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = player.png; path = Resources/player.png; sourceTree = "<group>"; };
 		09F942BF174B06F700CED4FC /* projectile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = projectile.png; path = Resources/projectile.png; sourceTree = "<group>"; };
 		09F942C0174B06F700CED4FC /* target.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = target.png; path = Resources/target.png; sourceTree = "<group>"; };
@@ -966,6 +989,9 @@
 		090E3B49174B3F80000C65FE /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				09973E43174C6F5200AD1815 /* laugh.caf */,
+				09973E44174C6F5200AD1815 /* ow.caf */,
+				09973E45174C6F5200AD1815 /* whack.caf */,
 				090E3B4A174B3F80000C65FE /* background-music-aac.caf */,
 				090E3B4B174B3F80000C65FE /* pew-pew-lei.caf */,
 			);
@@ -1043,6 +1069,7 @@
 		092DD94616084EC40078ED9E /* RCGame */ = {
 			isa = PBXGroup;
 			children = (
+				09EBB21E174BA1B400969F96 /* BeatTheMole */,
 				090E3B59174B6AB5000C65FE /* DragGame */,
 				090E3B55174B4EFE000C65FE /* BearGame */,
 				09F942C4174B089F00CED4FC /* ShootGame */,
@@ -1071,6 +1098,13 @@
 		092DD94716084EC40078ED9E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				09EBB222174BA5C200969F96 /* bg_dirt.plist */,
+				09EBB223174BA5C200969F96 /* bg_dirt.png */,
+				09EBB224174BA5C200969F96 /* btm_grass.plist */,
+				09EBB225174BA5C200969F96 /* btm_grass.png */,
+				09EBB226174BA5C200969F96 /* mole.plist */,
+				09EBB227174BA5C200969F96 /* mole.png */,
+				090E3B65174B73DC000C65FE /* turtle.png */,
 				090E3B5D174B6DAA000C65FE /* bird.png */,
 				090E3B5E174B6DAA000C65FE /* blue-shooting-stars.png */,
 				090E3B5F174B6DAA000C65FE /* cat.png */,
@@ -1922,6 +1956,15 @@
 			path = GLSL;
 			sourceTree = "<group>";
 		};
+		09EBB21E174BA1B400969F96 /* BeatTheMole */ = {
+			isa = PBXGroup;
+			children = (
+				09EBB21F174BA1E800969F96 /* RCBeatTheMoleScene.h */,
+				09EBB220174BA1E800969F96 /* RCBeatTheMoleScene.m */,
+			);
+			path = BeatTheMole;
+			sourceTree = "<group>";
+		};
 		09F942C4174B089F00CED4FC /* ShootGame */ = {
 			isa = PBXGroup;
 			children = (
@@ -2064,6 +2107,16 @@
 				090E3B62174B6DAA000C65FE /* blue-shooting-stars.png in Resources */,
 				090E3B63174B6DAA000C65FE /* cat.png in Resources */,
 				090E3B64174B6DAA000C65FE /* dog.png in Resources */,
+				090E3B66174B73DC000C65FE /* turtle.png in Resources */,
+				09EBB228174BA5C200969F96 /* bg_dirt.plist in Resources */,
+				09EBB229174BA5C200969F96 /* bg_dirt.png in Resources */,
+				09EBB22A174BA5C200969F96 /* btm_grass.plist in Resources */,
+				09EBB22B174BA5C200969F96 /* btm_grass.png in Resources */,
+				09EBB22C174BA5C200969F96 /* mole.plist in Resources */,
+				09EBB22D174BA5C200969F96 /* mole.png in Resources */,
+				09973E46174C6F5200AD1815 /* laugh.caf in Resources */,
+				09973E47174C6F5200AD1815 /* ow.caf in Resources */,
+				09973E48174C6F5200AD1815 /* whack.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2323,6 +2376,7 @@
 				090E3B50174B412E000C65FE /* RCShootGameOverScene.m in Sources */,
 				090E3B58174B4F11000C65FE /* RCBearGameScene.m in Sources */,
 				090E3B5C174B6B4B000C65FE /* RCDragGameScene.m in Sources */,
+				09EBB221174BA1E800969F96 /* RCBeatTheMoleScene.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

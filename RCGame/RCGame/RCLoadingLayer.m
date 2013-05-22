@@ -16,6 +16,7 @@
 #import "RCShootGameScene.h"
 #import "RCBearGameScene.h"
 #import "RCDragGameScene.h"
+#import "RCBeatTheMoleScene.h"
 
 @implementation RCLoadingLayer
 
@@ -98,6 +99,11 @@
         case ST_DRAGGAME:
         {
             scene = [RCDragGameScene node];
+            break;
+        }
+        case ST_BEATTHEMOLE:
+        {
+            scene = [RCBeatTheMoleScene node];
             break;
         }
         default:

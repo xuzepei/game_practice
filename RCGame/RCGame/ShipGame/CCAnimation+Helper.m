@@ -11,7 +11,7 @@
 @implementation CCAnimation (Helper)
 
 // Creates an animation from single files.
-+(CCAnimation*) animationWithFile:(NSString*)name frameCount:(int)frameCount delay:(float)delay
++ (CCAnimation*)animationWithFile:(NSString*)name frameCount:(int)frameCount delay:(float)delay
 {
 	// load the animation frames as textures and create the sprite frames
 	NSMutableArray* frames = [NSMutableArray arrayWithCapacity:frameCount];
@@ -30,17 +30,34 @@
 	}
 	
 	// create an animation object from all the sprite animation frames
-	return [CCAnimation animationWithFrames:frames delay:delay];
+	return [CCAnimation animationWithSpriteFrames:frames delay:delay];
 }
 
 // Creates an animation from sprite frames.
-+(CCAnimation*) animationWithFrame:(NSString*)frame frameCount:(int)frameCount delay:(float)delay
++ (CCAnimation*)animationWithFrame:(NSString*)frame frameCount:(int)frameCount delay:(float)delay
 {
 	// load the ship's animation frames as textures and create a sprite frame
 	NSMutableArray* frames = [NSMutableArray arrayWithCapacity:frameCount];
 	for (int i = 0; i < frameCount; i++)
 	{
 		NSString* file = [NSString stringWithFormat:@"%@%i.png", frame, i];
+		CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+		CCSpriteFrame* frame = [frameCache spriteFrameByName:file];
+		[frames addObject:frame];
+	}
+	
+	// return an animation object from all the sprite animation frames
+	return [CCAnimation animationWithSpriteFrames:frames delay:delay];
+}
+
+// Creates an animation from sprite frames.
++ (CCAnimation*)animationWithFrame:(NSString*)frame indexArray:(NSArray*)indexArray delay:(float)delay
+{
+	// load the ship's animation frames as textures and create a sprite frame
+	NSMutableArray* frames = [NSMutableArray arrayWithCapacity:[indexArray count]];
+	for (NSString* index in indexArray)
+	{
+		NSString* file = [NSString stringWithFormat:@"%@%@.png", frame,index];
 		CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
 		CCSpriteFrame* frame = [frameCache spriteFrameByName:file];
 		[frames addObject:frame];

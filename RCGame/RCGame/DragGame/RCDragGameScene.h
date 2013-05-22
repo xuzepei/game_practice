@@ -13,6 +13,10 @@
     
 }
 
+@property(nonatomic,retain)CCSprite* bgSprite;
+@property(nonatomic,retain)CCSprite* selectedSprite;
+@property(nonatomic,retain)NSMutableArray* willMoveSpriteArray;
+
 + (id)scene;
 + (RCDragGameScene*)sharedInstance;
 
