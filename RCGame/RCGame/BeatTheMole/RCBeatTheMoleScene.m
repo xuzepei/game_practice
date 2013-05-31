@@ -37,6 +37,8 @@ static RCBeatTheMoleScene* sharedInstance;
         
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"bg_dirt.plist"];
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"btm_grass.plist"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_0.plist"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_1.plist"];
         
         //添加背景
         CCSprite* dirt = [CCSprite spriteWithSpriteFrameName:@"bg_dirt.png"];

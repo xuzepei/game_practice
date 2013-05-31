@@ -95,7 +95,10 @@
     //Hello World
 	//[director_ runWithScene: [RCLoadingLayer goToScene:ST_HELLOWORLD]];
     
-    //Shoot Game 投掷飞镖动作
+    //Tile Game
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_TILEGAME]];
+    
+    //Shoot Game
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_SHOOTGAME]];
     
     //Bear Game
@@ -105,7 +108,10 @@
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_DRAGGAME]];
     
     //Beat the mole
-    [director_ runWithScene:[RCLoadingLayer goToScene:ST_BEATTHEMOLE]];
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_BEATTHEMOLE]];
+    
+    //Mask
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_MASK]];
     
     //DoodleDrop Game
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_DOODLEDROP]];
@@ -123,6 +129,9 @@
     
     //RCShipGameScene
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_SHIPGAMESCENE]];
+    
+    //JoyStick
+    [director_ runWithScene:[RCLoadingLayer goToScene:ST_JOYSTICK]];
 	
 	return YES;
 }
@@ -170,8 +179,6 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
     //处理内存警告
-    [[CCTextureCache sharedTextureCache] removeUnusedTextures];
-    
 	[[CCDirector sharedDirector] purgeCachedData];
 }
 

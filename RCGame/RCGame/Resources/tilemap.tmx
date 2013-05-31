@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tmw_desert_spacing" tilewidth="32" tileheight="32" spacing="1" margin="1">
+  <image source="tmw_desert_spacing.png" width="265" height="199"/>
+ </tileset>
+ <layer name="background" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztl90OgjAMhfsGXKsJYFCCouj7P527wATn2F93YJBefBcEVnrasw5KIipHDoojg9MkForK45mz4qK4R3BVNInzCaHWdJhy8a1BY4i5Bt9cfPLWn5mrAdI/Nh0Pmve8bW88A3S04H7c6N/3/eS+a4/0jvi2GqO1DYpiBPkersdaB6Wmo56sfVlYS7ONVP0oEoOMPaxca0SNuJ7fEqg5Zdu76D2szxdfKOF7TXMulI6pqQbW2MSbWbvU/RDC6OjXc2vjk0uI50Jm997mPEJzTl4ReL1Exasca2PPDM5ZYwL9T8H55iFwbij0Hrl0xNZHX5faG6n6H+oJk45c/31T1CMW0q63enYjdcTGiumTrgOV29L9WJKlZhi69jnOYkEQ8oUyyEHYH5RBDqJDdOSK6MgL0SGg+AAmVSQM
+  </data>
+ </layer>
+ <objectgroup name="objects" width="50" height="50">
+  <object name="player_point" x="99" y="292" width="27" height="25"/>
+ </objectgroup>
+</map>

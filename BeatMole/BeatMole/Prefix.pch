@@ -1,0 +1,83 @@
+//
+// Prefix header for all source files of the 'Test' target in the 'Test' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iPhone SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "cocos2d.h"
+#endif
+
+
+#define LOG_HERE CCLOG(@"%@: %@",NSStringFromSelector(_cmd),self)
+#define WIN_SIZE [[CCDirector sharedDirector] winSize]
+#define DIRECTOR [CCDirector sharedDirector]
+
+typedef enum
+{
+    ST_UNKNOWN = 0,
+    ST_HOME,
+    ST_BEATMOLE,
+}SCENE_TYPE;
+
+typedef enum
+{
+    MT_UNKNOWN = -1,
+    MT_TYPE0,
+    MT_TYPE1,
+    MT_TYPE2,
+    MT_TYPE3,
+    MT_TYPE4,
+    MT_TYPE5,
+}MOLE_TYPE;
+
+typedef enum
+{
+    TT_UNKNOWN = -1,
+    TT_RED,
+    TT_BLUE,
+}TEAM_TYPE;
+
+typedef enum{
+    SHT_UNKNOWN = -1,
+    SHT_MESSAGE,
+    SHT_EMAIL,
+    SHT_QQ,
+    SHT_SINA
+}SHARE_TYPE;
+
+typedef enum{
+    T_UNKNOWN = 0,
+    T_HOMEMENUITEM0,
+    T_HOMEMENUITEM1,
+    T_HOMEMENUITEM2,
+    T_HOMEMENUITEM3,
+    T_HOMEMENUITEM4,
+    T_SELECT_TEAM_MENUITEM0,
+    T_SELECT_TEAM_MENUITEM1,
+    T_SELECT_TEAM_BACKBUTTON,
+    T_SELECT_LEVEL_BACKBUTTON,
+    T_SELECT_LEVEL_MENUITEM0,
+    T_SELECT_LEVEL_MENUITEM1,
+    T_SELECT_LEVEL_MENUITEM2,
+    T_SELECT_LEVEL_MENUITEM3,
+    T_SELECT_LEVEL_MENUITEM4,
+    T_SELECT_LEVEL_MENUITEM5,
+    T_BEAT_MOLE_SCENE_BACKBUTTON,
+    T_BEAT_MOLE_SCENE_PAUSEBUTTON,
+}TAG;
+
+//导航条高度
+#define NAVIGATION_BAR_HEIGHT 32.0
+
+//状态栏高度
+#define STATUS_BAR_HEIGHT 20.0
+
+//ios版本
+#define SYSTEM_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]

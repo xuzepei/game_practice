@@ -9,9 +9,12 @@
 #import "RCShootGameScene.h"
 #import "SimpleAudioEngine.h"
 #import "RCShootGameOverScene.h"
+#import "RCMonster.h"
 
+#define LEVEL_MAX_KILL_COUNT 5
+#define MAX_LEVEL 3
 
-static RCShootGameScene* sharedInstance;
+static RCShootGameScene* sharedInstance = nil;
 @implementation RCShootGameScene
 
 + (id)scene
@@ -36,21 +39,37 @@ static RCShootGameScene* sharedInstance;
         self.isTouchEnabled = YES;
         _targets = [[NSMutableArray alloc] init];
         _projectiles = [[NSMutableArray alloc] init];
+        self.level = 1;
         
         CGSize screenSize = WIN_SIZE;
         
         CCLayerColor* colorLayer = [CCLayerColor layerWithColor:ccc4(255, 255, 255, 255)];
 		[self addChild:colorLayer z:0 tag:SHOOT_GAME_BG_TAG];
         
-        CCSprite* player = [CCSprite spriteWithFile:@"player.png"];
-        player.position = ccp(player.contentSize.width/2.0,screenSize.height/2.0);
-        [self addChild: player];
+        self.levelLabel = [CCLabelTTF labelWithString:@"Level: 0" fontName:@"Verdana" fontSize:14];
+        self.levelLabel.color = ccc3(0, 0, 0);
+        self.levelLabel.anchorPoint = ccp(0, 1);
+        self.levelLabel.position = ccp(10, screenSize.height - 10);
+        [self addChild:self.levelLabel z:10];
+        
+        self.killCountLabel = [CCLabelTTF labelWithString:@"Kill Enemy: 0" fontName:@"Verdana" fontSize:14];
+        self.killCountLabel.color = ccc3(0, 0, 0);
+        self.killCountLabel.anchorPoint = ccp(1, 0);
+        self.killCountLabel.position = ccp(screenSize.width - 10, 10);
+        [self addChild:self.killCountLabel z:10];
+        
+        
+        self.player = [CCSprite spriteWithFile:@"player2.png"];
+        self.player.position = ccp(self.player.contentSize.width/2.0,screenSize.height/2.0);
+        [self addChild: self.player];
 
         [self schedule:@selector(scheduleAddTarget:) interval:1.0];
         
         [self schedule:@selector(update:)];
         
         [[SimpleAudioEngine sharedEngine] playBackgroundMusic:@"background-music-aac.caf" loop:YES];
+        
+        [self start];
     }
     
     return self;
@@ -58,15 +77,26 @@ static RCShootGameScene* sharedInstance;
 
 - (void)dealloc
 {
-    sharedInstance = nil;
     self.targets = nil;
     self.projectiles = nil;
+    self.player = nil;
+    self.levelLabel = nil;
+    self.killCountLabel = nil;
+    sharedInstance = nil;
     
     [super dealloc];
 }
 
 - (void)update:(ccTime)dt
 {
+    //刷新数量
+    [self.levelLabel setString:[NSString stringWithFormat:@"Level: %d",self.level]];
+    [self.killCountLabel setString:[NSString stringWithFormat:@"Kill enemy: %d",self.targetsDestoryed]];
+    
+    if(NO == self.isGameProgressing)
+        return;
+    
+    //检测子弹和敌人碰撞
     NSMutableArray* projectilesToDelete = [[NSMutableArray alloc] init];
     
     for(CCSprite* projectile in self.projectiles)
@@ -77,6 +107,7 @@ static RCShootGameScene* sharedInstance;
                                            projectile.contentSize.width,
                                            projectile.contentSize.height);
         
+        BOOL monsterHit = NO;
         NSMutableArray* targetsToDelete = [[NSMutableArray alloc] init];
         
         for(CCSprite* target in self.targets)
@@ -87,29 +118,42 @@ static RCShootGameScene* sharedInstance;
                                            target.contentSize.width,
                                            target.contentSize.height);
             
-            //检查矩形相交
+            //检查矩形相交,检测碰撞，根据血量判断是否击毙
             if(CGRectIntersectsRect(projectileRect, targetRect))
             {
-                [targetsToDelete addObject:target];
-            } 
+                monsterHit = YES;
+                RCMonster* monster = (RCMonster*)target;
+                monster.hp--;
+                if(monster.hp <= 0)
+                {
+                    [targetsToDelete addObject:target];
+                }
+                
+                break;
+            }
         }
         
+        //如果打中了，则删除消耗的子弹，并播放声音
+        if(monsterHit)
+        {
+            [projectilesToDelete addObject:projectile];
+            [[SimpleAudioEngine sharedEngine] playEffect:@"explosion.caf"];
+        }
+        
+        //删除被击毙的目标
         for(CCSprite* target in targetsToDelete)
         {
             [self.targets removeObject:target];
             [self removeChild:target cleanup:YES]; 
         }
-        
-        if([targetsToDelete count])
-        {
-            [projectilesToDelete addObject:projectile];
-        }
+
+        //记录被击毙的敌人数量
+        self.targetsDestoryed += [targetsToDelete count];
         
         [targetsToDelete release];
     }
     
-    self.projectilesDestoryed += [projectilesToDelete count];
-    
+    //移除消耗的子弹
     for(CCSprite* projectile in projectilesToDelete)
     {
         [self.projectiles removeObject:projectile];
@@ -119,18 +163,47 @@ static RCShootGameScene* sharedInstance;
     [projectilesToDelete release];
     
     
-    if(self.projectilesDestoryed > 30)
+    //判断是否击毙超过等级数目敌人，超过判定胜利
+    if(self.targetsDestoryed >= LEVEL_MAX_KILL_COUNT)
     {
-        [[SimpleAudioEngine sharedEngine] stopBackgroundMusic];
-        RCShootGameOverScene* gameOverScene = [RCShootGameOverScene node];
-        [gameOverScene.label setString:@"You Win!"];
-        [DIRECTOR replaceScene:(CCScene*)gameOverScene];
+        self.level++;
+        
+        if(self.level > MAX_LEVEL)
+        {
+            [[SimpleAudioEngine sharedEngine] stopBackgroundMusic];
+            RCShootGameOverScene* gameOverScene = [RCShootGameOverScene node];
+            [gameOverScene.label setString:@"You Win!"];
+            [DIRECTOR replaceScene:(CCScene*)gameOverScene];
+        }
+        else
+        {
+            [self reset];
+            
+            CGSize screenSize = WIN_SIZE;
+            CCLabelTTF* levelTipLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"Level %d wave!",self.level] fontName:@"Verdana" fontSize:40.0];
+            levelTipLabel.tag = SG_LEVEL_TIP_TAG;
+            levelTipLabel.color = ccc3(0, 0, 0);
+            levelTipLabel.position = ccp(screenSize.width/2, screenSize.height/2);
+            levelTipLabel.scale = 0.1;
+            [self addChild:levelTipLabel z:10];
+            
+            id scaleToBig = [CCScaleTo actionWithDuration:0.5 scale:1.0];
+            id scaleToSmall = [CCScaleTo actionWithDuration:0.5 scale:0.1];
+            id actionDelayTime = [CCDelayTime actionWithDuration:1];
+            CCCallFunc* doneAction = [CCCallFuncN actionWithTarget:self selector:@selector(finishedLevelTip)];
+
+           [levelTipLabel runAction:[CCSequence actions:scaleToBig,actionDelayTime,scaleToSmall,doneAction,nil]];
+        }
     }
 
 }
 
 - (void)scheduleAddTarget:(ccTime)dt
 {
+    if(NO == self.isGameProgressing)
+        return;
+    
+    //添加敌人
     [self addTarget];
 }
 
@@ -139,7 +212,22 @@ static RCShootGameScene* sharedInstance;
     CGSize screenSize = WIN_SIZE;
     
     //设置target，坐标
-    CCSprite* target = [CCSprite spriteWithFile:@"target.png"];
+    //CCSprite* target = [CCSprite spriteWithFile:@"target.png"];
+    RCMonster* target = nil;
+    if ((arc4random() %2) ==0)
+    {
+        target = [RCWeakAndFastMonster monster];
+        target.hp *= self.level;
+        target.minMoveDuration /= self.level;
+        target.maxMoveDuration /= self.level;
+    }
+    else
+    {
+        target = [RCStrongAndSlowMonster monster];
+        target.hp *= self.level;
+        target.minMoveDuration /= self.level;
+        target.maxMoveDuration /= self.level;
+    }
     target.tag = SG_TARGET_TAG;
     [self.targets addObject:target];
     
@@ -153,8 +241,8 @@ static RCShootGameScene* sharedInstance;
     [self addChild:target];
     
     //计算速度
-    int min_duration = 6.0;
-    int max_duration = 10.0;
+    int min_duration = target.minMoveDuration;
+    int max_duration = target.maxMoveDuration;
     int range_duration = max_duration - min_duration;
     int actual_duration = (arc4random()%range_duration) + min_duration;
     
@@ -187,6 +275,39 @@ static RCShootGameScene* sharedInstance;
     [self removeChild:sprite cleanup:YES];
 }
 
+- (void)reset
+{
+    for(CCSprite* target in self.targets)
+    {
+        [self removeChild:target cleanup:YES];
+    }
+    
+    [self.targets removeAllObjects];
+    
+    
+    for(CCSprite* projectile in self.projectiles)
+    {
+        [self removeChild:projectile cleanup:YES];
+    }
+    
+    [self.projectiles removeAllObjects];
+    
+    self.targetsDestoryed = 0;
+    self.isGameProgressing = NO;
+}
+
+- (void)start
+{
+    self.isGameProgressing = YES;
+}
+
+- (void)finishedLevelTip
+{
+    [self removeChildByTag:SG_LEVEL_TIP_TAG cleanup:YES];
+    
+    [self start];
+}
+
 #pragma mark - Touch Event
 
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
@@ -199,7 +320,7 @@ static RCShootGameScene* sharedInstance;
     CGSize screenSize = WIN_SIZE;
     
     //创建飞盘
-    CCSprite* projectile = [CCSprite spriteWithFile:@"projectile.png"];
+    CCSprite* projectile = [CCSprite spriteWithFile:@"projectile2.png"];
     projectile.tag = SG_PROJECTILE_TAG;
     [self.projectiles addObject:projectile];
     
@@ -219,6 +340,12 @@ static RCShootGameScene* sharedInstance;
     float ratio = (float)off_y / (float)off_x;
     int real_y = (real_x * ratio) + projectile.position.y;
     CGPoint real_position = ccp(real_x, real_y);
+    
+    //炮塔旋转角度
+    float angleRadians = atanf(ratio);
+    float angleDegrees = CC_RADIANS_TO_DEGREES(angleRadians);
+    float cocos2dAngle = -1* angleDegrees; //cocos2d中顺时针转动角度为负数
+    _player.rotation = cocos2dAngle;
     
     //计算动作时间
     CGFloat distance = ccpDistance(projectile.position, real_position);

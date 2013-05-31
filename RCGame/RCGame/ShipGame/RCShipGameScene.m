@@ -9,8 +9,9 @@
 #import "RCShipGameScene.h"
 #import "RCShip.h"
 #import "RCBullet.h"
+#import "RCParallaxBackground.h"
 
-static RCShipGameScene* sharedInstance;
+static RCShipGameScene* sharedInstance = nil;
 @implementation RCShipGameScene
 
 + (id)scene
@@ -36,16 +37,14 @@ static RCShipGameScene* sharedInstance;
         // Load all of the game's artwork up front.
 		CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
 		[frameCache addSpriteFramesWithFile:@"game-art.plist"];
-        
-        CCSprite* background = [CCSprite spriteWithFile:@"ship_game_bg@2x.png"];
-		background.position = CGPointMake(screenSize.width / 2, screenSize.height / 2);
-		[self addChild:background];
-        
+
+        //添加背景
+        RCParallaxBackground* parallaxbg = [RCParallaxBackground node];
+		[self addChild:parallaxbg z:-1];
         
         RCShip* ship = [RCShip ship];
 		ship.position = CGPointMake(80, screenSize.height / 2);
 		[self addChild:ship z:10];
-        
         
         // Now uses the image from the Texture Atlas.
 		CCSpriteFrame* bulletFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"bullet.png"];
@@ -81,14 +80,14 @@ static RCShipGameScene* sharedInstance;
 	CCLOG(@"Number of active Bullets: %i", [self.bulletSpriteBatch.children count]);
 }
 
--(CCSpriteBatchNode*) bulletSpriteBatch
+- (CCSpriteBatchNode*)bulletSpriteBatch
 {
 	CCNode* node = [self getChildByTag:GameSceneNodeTagBulletSpriteBatch];
 	NSAssert([node isKindOfClass:[CCSpriteBatchNode class]], @"not a CCSpriteBatchNode");
 	return (CCSpriteBatchNode*)node;
 }
 
--(void) shootBulletFromShip:(RCShip*)ship
+- (void)shootBulletFromShip:(RCShip*)ship
 {
 	CCArray* bullets = [self.bulletSpriteBatch children];
 	

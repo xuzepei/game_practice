@@ -18,6 +18,12 @@
 
 @property(nonatomic,retain)NSMutableArray* targets;
 @property(nonatomic,retain)NSMutableArray* projectiles;
-@property(assign)int projectilesDestoryed;
+@property(assign)int targetsDestoryed;
+@property(nonatomic,retain)CCSprite* player;
+@property(nonatomic,retain)CCSprite* projectile;
+@property(assign)int level;
+@property(nonatomic,retain)CCLabelTTF* levelLabel;
+@property(nonatomic,retain)CCLabelTTF* killCountLabel;
+@property(assign)BOOL isGameProgressing;
 
 @end

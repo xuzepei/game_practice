@@ -32,7 +32,10 @@ typedef enum
     ST_SHOOTGAME,
     ST_BEARGAME,
     ST_DRAGGAME,
-    ST_BEATTHEMOLE
+    ST_BEATTHEMOLE,
+    ST_TILEGAME,
+    ST_MASK,
+    ST_JOYSTICK
 }SCENE_TYPE;
 
 typedef enum
@@ -66,5 +69,6 @@ typedef enum{
     SG_PROJECTILE_TAG,
     SG_GAME_OVER_LABEL_TAG,
     SG_GAME_OVER_BG_TAG,
+    SG_LEVEL_TIP_TAG,
 }TAG;
 

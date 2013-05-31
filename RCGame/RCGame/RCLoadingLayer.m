@@ -17,6 +17,9 @@
 #import "RCBearGameScene.h"
 #import "RCDragGameScene.h"
 #import "RCBeatTheMoleScene.h"
+#import "RCTileGameScene.h"
+#import "RCMaskScene.h"
+#import "RCJoyStickScene.h"
 
 @implementation RCLoadingLayer
 
@@ -73,37 +76,52 @@
         }
         case ST_EARTH:
         {
-            scene = [RCEarthScene node];
+            scene = [RCEarthScene scene];
             break;
         }
         case ST_PARALLAX:
         {
-            scene = [RCParallaxScene node];
+            scene = [RCParallaxScene scene];
             break;
         }
         case ST_SHIPGAMESCENE:
         {
-            scene = [RCShipGameScene node];
+            scene = [RCShipGameScene scene];
             break;
         }
         case ST_SHOOTGAME:
         {
-            scene = [RCShootGameScene node];
+            scene = [RCShootGameScene scene];
             break;
         }
         case ST_BEARGAME:
         {
-            scene = [RCBearGameScene node];
+            scene = [RCBearGameScene scene];
             break;
         }
         case ST_DRAGGAME:
         {
-            scene = [RCDragGameScene node];
+            scene = [RCDragGameScene scene];
             break;
         }
         case ST_BEATTHEMOLE:
         {
-            scene = [RCBeatTheMoleScene node];
+            scene = [RCBeatTheMoleScene scene];
+            break;
+        }
+        case ST_TILEGAME:
+        {
+            scene = [RCTileGameScene scene];
+            break;
+        }
+        case ST_MASK:
+        {
+            scene = [RCMaskScene scene:1];
+            break;
+        }
+        case ST_JOYSTICK:
+        {
+            scene = [RCJoyStickScene scene];
             break;
         }
         default:

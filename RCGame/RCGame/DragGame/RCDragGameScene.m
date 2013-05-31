@@ -37,6 +37,7 @@ static RCDragGameScene* sharedInstance;
         self.bgSprite.anchorPoint = ccp(0,0);
         [self addChild:self.bgSprite];
         
+        self.position = ccp(-100, -100);
         
         _willMoveSpriteArray = [[NSMutableArray alloc] init];
         NSArray* imageNameArray = [NSArray arrayWithObjects:@"bird.png", @"cat.png", @"dog.png", @"turtle.png", nil];
