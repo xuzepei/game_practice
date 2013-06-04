@@ -34,6 +34,7 @@
     {
         self.nickname = @"玩家";
         self.teamType = TT_RED;
+        self.ap = 1;
     }
     
     return self;

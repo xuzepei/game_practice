@@ -13,6 +13,8 @@
 #import "RCMole.h"
 #import "RCUser.h"
 #import "RCSelectLevelScene.h"
+#import "RCLevel.h"
+#import "RCWave.h"
 
 #define MAX_SCORE 300
 
@@ -39,6 +41,17 @@ static RCBeatMoleScene* sharedInstance = nil;
         sharedInstance = self;
         self.isTouchEnabled = YES;
         CGSize winSize = WIN_SIZE;
+        _moles = [[NSMutableArray alloc] init];
+        _showingHoleSet = [[NSMutableSet alloc] init];
+        _showingMoleArray = [[NSMutableArray alloc] init];
+        
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"land.plist"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_0.plist"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_1.plist"];
+
+        RCLevel* level = [RCLevel sharedInstance];
+        [level updateByLevelNumber:0];
+        self.userHP = level.userHP;
         
         //返回按钮
         CCMenuItem* menuItem = [CCMenuItemImage itemWithNormalImage:@"back_button.png" selectedImage:@"back_button_selected.png" target:self selector:@selector(clickedMenuItem:)];
@@ -46,7 +59,7 @@ static RCBeatMoleScene* sharedInstance = nil;
         menuItem.tag = T_BEAT_MOLE_SCENE_BACKBUTTON;
         CCMenu* backMenu = [CCMenu menuWithItems:menuItem,nil];
         backMenu.position = ccp(10, winSize.height - menuItem.contentSize.height/2.0);
-        [self addChild:backMenu];
+        [self addChild:backMenu z:10];
         
         //暂停按钮
         self.pauseMenuItem = [CCMenuItemFont itemWithString:@"暂停" target:self selector:@selector(clickedMenuItem:)];
@@ -55,8 +68,7 @@ static RCBeatMoleScene* sharedInstance = nil;
         self.pauseMenuItem.tag = T_BEAT_MOLE_SCENE_PAUSEBUTTON;
         CCMenu* pauseButton = [CCMenu menuWithItems:self.pauseMenuItem,nil];
         pauseButton.position = ccp(winSize.width - self.pauseMenuItem.contentSize.height - 10, winSize.height - self.pauseMenuItem.contentSize.height/2.0 - 10);
-        [self addChild:pauseButton];
-        
+        [self addChild:pauseButton z:10];
         
         //添加分数显示
         self.scoreLabel = [CCLabelTTF labelWithString:@"score: 0" fontName:@"Verdana" fontSize:14];
@@ -64,136 +76,95 @@ static RCBeatMoleScene* sharedInstance = nil;
         self.scoreLabel.position = ccp(winSize.width - 10, 10);
         [self addChild:self.scoreLabel z:10];
         
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"land.plist"];
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"bm_bg.plist"];
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_0.plist"];
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_1.plist"];
+        //添加生命值显示
+        self.hpLabel = [CCLabelTTF labelWithString:@"hp: 0" fontName:@"Verdana" fontSize:14];
+        self.hpLabel.anchorPoint = ccp(1, 0);
+        self.hpLabel.position = ccp(winSize.width - 100, 10);
+        [self addChild:self.hpLabel z:10];
         
         //添加地面背景
-        CCSprite* dirt = [CCSprite spriteWithSpriteFrameName:@"land.png"];
+        NSString* bgImageName = @"land.png";
+        if([RCTool isIphone5])
+            bgImageName = @"land-568h.png";
+        
+        CCSprite* dirt = [CCSprite spriteWithSpriteFrameName:bgImageName];
         dirt.position = ccp(winSize.width/2.0, winSize.height/2.0);
         [self addChild:dirt z:-20];
-        
-
-        //分层草地背景
-        CGFloat offset_y = winSize.height;
-        CCSprite* bg0 = [CCSprite spriteWithSpriteFrameName:@"bm_bg0.png"];
-        bg0.anchorPoint = ccp(0, 1);
-        bg0.position = ccp(0, offset_y);
-        [self addChild:bg0 z:-10];
-        offset_y -= bg0.contentSize.height;
-        
-        CCSprite* bg1 = [CCSprite spriteWithSpriteFrameName:@"bm_bg1.png"];
-        bg1.anchorPoint = ccp(0, 1);
-        bg1.position = ccp(0,offset_y);
-        [self addChild:bg1 z:-8];
-        offset_y -= bg1.contentSize.height;
-        
-        CCSprite* bg2 = [CCSprite spriteWithSpriteFrameName:@"bm_bg2.png"];
-        bg2.anchorPoint = ccp(0, 1);
-        bg2.position = ccp(0, offset_y);
-        [self addChild:bg2 z:-6];
-        offset_y -= bg2.contentSize.height;
-        
-        CCSprite* bg3 = [CCSprite spriteWithSpriteFrameName:@"bm_bg3.png"];
-        bg3.anchorPoint = ccp(0, 1);
-        bg3.position = ccp(0, offset_y);
-        [self addChild:bg3 z:-4];
-        offset_y -= bg3.contentSize.height;
-        
-        CCSprite* bg4 = [CCSprite spriteWithSpriteFrameName:@"bm_bg4.png"];
-        bg4.anchorPoint = ccp(0, 1);
-        bg4.position = ccp(0, offset_y);
-        [self addChild:bg4 z:-2];
-        offset_y -= bg4.contentSize.height;
-        
 
         //设置洞口
         _positionArray = [[NSMutableArray alloc] init];
         
-        CGPoint point = ccp(228/2.0, 496.0/2.0);
+        CGPoint point = ccp(228/2.0, 476.0/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
         
-        point = ccp(630/2.0, 488.0/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(90/2.0, 392.0/2.0);
+        point = ccp(630/2.0, 468.0/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
         
         
-        point = ccp(438/2.0, 392.0/2.0);
+        point = ccp(90/2.0, 372.0/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
         
         
-        point = ccp(776/2.0, 392.0/2.0);
+        point = ccp(438/2.0, 372.0/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
         
         
-        point = ccp(296/2.0, 284/2.0);
+        point = ccp(776/2.0, 372.0/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
         
         
-        point = ccp(606/2.0, 284/2.0);
+        point = ccp(296/2.0, 264/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
         
         
-        point = ccp(190/2.0, 144/2.0);
+        point = ccp(606/2.0, 264/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
         
         
-        point = ccp(790/2.0, 138.0/2.0);
+        point = ccp(190/2.0, 124/2.0);
+        [_positionArray addObject:NSStringFromCGPoint(point)];
+        
+        
+        point = ccp(790/2.0, 118.0/2.0);
         [_positionArray addObject:NSStringFromCGPoint(point)];
 
+        //计算第一波出兵
+        NSArray* moles = [self molesForWave:0];
+        if([moles count])
+        {
+            [_moles removeAllObjects];
+            [_moles addObjectsFromArray:moles];
+        }
         
-        NSArray* redTeamMoles = [RCTool getMoleByTeamType:TT_RED];
-        NSArray* blueTeamMoles = [RCTool getMoleByTeamType:TT_BLUE];
-        
-        _moles = [[NSMutableArray alloc] init];
-        [_moles addObjectsFromArray:redTeamMoles];
-        [_moles addObjectsFromArray:blueTeamMoles];
-
-        _showingHoleSet = [[NSMutableSet alloc] init];
-        
-        [self schedule:@selector(tryPopMoles:) interval:2.0];
+        [self schedule:@selector(tryPopMoles:) interval:1.0];
         
         //倒计时
-        CCSprite* progressBorder = [CCSprite spriteWithFile:@"progressbarborder.png"];
-        [progressBorder setAnchorPoint:ccp(0,0)];
-        [progressBorder setPosition:ccp(100+progressBorder.contentSize.width,winSize.height - progressBorder.contentSize.height)];
-        [self addChild:progressBorder z:10];
+//        CCSprite* progressBorder = [CCSprite spriteWithFile:@"progressbarborder.png"];
+//        [progressBorder setAnchorPoint:ccp(0,0)];
+//        [progressBorder setPosition:ccp(100+progressBorder.contentSize.width,winSize.height - progressBorder.contentSize.height)];
+//        [self addChild:progressBorder z:10];
+//        
+//        CCSprite* progressbarsprite = [CCSprite spriteWithFile:@"progressbar.png"];
+//        CCProgressTimer* progressBar = [CCProgressTimer progressWithSprite:progressbarsprite];
+//        progressBar.barChangeRate=ccp(1,0);
+//        progressBar.midpoint=ccp(0.0,0.0f);
+//        [progressBar setAnchorPoint:ccp(0,0)];
+//        progressBar.type = kCCProgressTimerTypeBar;
+//        [progressBar setPosition:ccp(100+progressBar.contentSize.width,winSize.height - progressBar.contentSize.height)];
+//        [self addChild:progressBar];
         
-        CCSprite* progressbarsprite = [CCSprite spriteWithFile:@"progressbar.png"];
-        CCProgressTimer* progressBar = [CCProgressTimer progressWithSprite:progressbarsprite];
-        progressBar.barChangeRate=ccp(1,0);
-        progressBar.midpoint=ccp(0.0,0.0f);
-        [progressBar setAnchorPoint:ccp(0,0)];
-        progressBar.type = kCCProgressTimerTypeBar;
-        [progressBar setPosition:ccp(100+progressBar.contentSize.width,winSize.height - progressBar.contentSize.height)];
-        [self addChild:progressBar];
-        
-        CCProgressFromTo *progressTo = [CCProgressFromTo actionWithDuration:60 from:100 to:0];
-        CCCallFunc *timeOut = [CCCallFunc actionWithTarget:self selector:@selector(timeOut:)];
-        CCSequence *sequence = [CCSequence actions:progressTo, timeOut,nil];
-        [progressBar runAction:sequence];
+//        CCProgressFromTo *progressTo = [CCProgressFromTo actionWithDuration:60 from:100 to:0];
+//        CCCallFunc *timeOut = [CCCallFunc actionWithTarget:self selector:@selector(timeOut:)];
+//        CCSequence *sequence = [CCSequence actions:progressTo, timeOut,nil];
+//        [progressBar runAction:sequence];
         
         // Preload sound effects
         [[SimpleAudioEngine sharedEngine] preloadEffect:@"hi.caf"];
         [[SimpleAudioEngine sharedEngine] preloadEffect:@"yes.caf"];
         [[SimpleAudioEngine sharedEngine] preloadEffect:@"no.caf"];
         [[SimpleAudioEngine sharedEngine] playBackgroundMusic:@"bg.caf" loop:YES];
-        
-        
-//        RCMole* mole = [_moles lastObject];
-//        NSString* pointString = [_positionArray objectAtIndex:0];
-//        mole.position = CGPointFromString(pointString);
-//        [_showingHoleSet addObject:@"0"];
-//        mole.showingHoleIndex = 0;
-//        [self addChild:mole];
-//        [self popMole:mole];
-        
+
         [self scheduleUpdate];
-        
     }
     
     return self;
@@ -205,10 +176,12 @@ static RCBeatMoleScene* sharedInstance = nil;
     self.laughAnimation = nil;
     self.hitAnimation = nil;
     self.scoreLabel = nil;
+    self.hpLabel = nil;
     self.positionArray = nil;
-    self.layerZIndex = nil;
+    self.showingMoleArray = nil;
     self.showingHoleSet = nil;
     self.pauseMenuItem = nil;
+    self.currentWave = nil;
     
     sharedInstance = nil;
     [super dealloc];
@@ -217,6 +190,101 @@ static RCBeatMoleScene* sharedInstance = nil;
 - (void)update:(ccTime)delta
 {
     [self.scoreLabel setString:[NSString stringWithFormat:@"score: %d", self.score]];
+    
+    [self.hpLabel setString:[NSString stringWithFormat:@"hp: %d",self.userHP]];
+    
+    if(self.currentWaveNumber > [[RCLevel sharedInstance].waveArray count] || self.userHP <= 0)
+    {
+        self.isGameOver = YES;
+        [self unscheduleUpdate];
+        [self unscheduleAllSelectors];
+        [self showResult];
+    }
+}
+
+- (NSArray*)molesForWave:(int)waveNumber
+{
+    NSMutableArray* moles = [[[NSMutableArray alloc] init] autorelease];
+    
+    self.currentWaveNumber = waveNumber;
+    RCLevel* level = [RCLevel sharedInstance];
+    RCUser* user = [RCUser sharedInstance];
+    NSMutableSet* moleTypeSet = [[[NSMutableSet alloc] init] autorelease];
+    if(self.currentWaveNumber < [level.waveArray count])
+    {
+        self.currentWave = [level.waveArray objectAtIndex:self.currentWaveNumber];
+        NSMutableArray* assignmentArray = self.currentWave.assignmentArray;
+        
+        //添加正确的小兵
+        for(NSDictionary* assignment in assignmentArray)
+        {
+            NSString* moleType = [assignment objectForKey:@"type"];
+            if(0 == [moleType length])
+                continue;
+            
+            [moleTypeSet addObject:moleType];
+            
+            NSString* count = [assignment objectForKey:@"count"];
+            RCMole* mole = nil;
+            if(TT_RED == user.teamType)
+            {
+                for(int i = 0; i < [count intValue]; i++)
+                {
+                    mole = [RCTool getMoleByTeamType:TT_BLUE moleType:moleType];
+                    [moles addObject:mole];
+                }
+            }
+            else if(TT_BLUE == user.teamType)
+            {
+                for(int i = 0; i < [count intValue]; i++)
+                {
+                    mole = [RCTool getMoleByTeamType:TT_RED moleType:moleType];
+                    [moles addObject:mole];
+                }
+            }
+        }
+        
+        //添加错误的小兵
+        NSArray* moleTypeArray = [moleTypeSet allObjects];
+        
+        for(int i = 0; i < self.currentWave.wrongShowNumber; i++)
+        {
+            if(0 == [moleTypeArray count])
+                continue;
+            
+            NSUInteger randomIndex = arc4random() % [moleTypeArray count];
+            
+            NSString* moleType = [moleTypeArray objectAtIndex:randomIndex];
+            
+            RCMole* mole = nil;
+            if(TT_RED == user.teamType)
+            {
+                mole = [RCTool getMoleByTeamType:TT_RED moleType:moleType];
+            }
+            else if(TT_BLUE == user.teamType)
+            {
+                mole = [RCTool getMoleByTeamType:TT_BLUE moleType:moleType];
+            }
+            
+            [moles addObject:mole];
+        }
+        
+    }
+    else
+    {
+        self.currentWave = nil;
+    }
+    
+    //随机排序数组
+    NSUInteger count = [moles count];
+    for (NSUInteger i = 0; i < count; ++i) {
+        // Select a random element between i and end of array to swap with.
+        NSInteger nElements = count - i;
+        NSInteger n = (arc4random() % nElements) + i;
+        [moles exchangeObjectAtIndex:i withObjectAtIndex:n];
+    }
+    
+    return moles;
 }
 
 - (void)tryPopMoles:(ccTime)dt
@@ -224,59 +292,50 @@ static RCBeatMoleScene* sharedInstance = nil;
     if(self.isGameOver)
         return;
     
-    if(self.score >= MAX_SCORE)
-    {
-        CGSize screenSize = WIN_SIZE;
-        
-        CCLabelTTF* gameOverLabel = [CCLabelTTF labelWithString:@"胜利过关！" fontName:@"Marker Felt" fontSize:60.0];
-        gameOverLabel.position = ccp(screenSize.width/2, screenSize.height/2);
-        gameOverLabel.scale = 0.1;
-        [self addChild:gameOverLabel z:10];
-        [gameOverLabel runAction:[CCScaleTo actionWithDuration:0.5 scale:1.0]];
-        
-        self.isGameOver = YES;
+    if(0 == [self.moles count])
         return;
-        
-    }
     
-    if([_showingHoleSet count] < [_positionArray count])
+    int showingHoleCount = [_showingHoleSet count];
+    int addCount = self.currentWave.maxShowNumber - showingHoleCount;
+    if(addCount <= 0)
+        return;
+    
+    for(int i = 0; i < addCount && [_moles count]; i++)
     {
-        for(RCMole* mole in self.moles)
+        RCMole* mole = [_moles objectAtIndex:0];
+        if(0 == mole.numberOfRunningActions && -1 == mole.showingHoleIndex)
         {
-            if(arc4random()%[self.moles count] == 0)
+            BOOL isUsing = YES;
+            do
             {
-                if(0 == mole.numberOfRunningActions && -1 == mole.showingHoleIndex)
+                int holeIndex = arc4random()%[_positionArray count];
+                NSString* holeIndexString = [NSString stringWithFormat:@"%d",holeIndex];
+                isUsing = [_showingHoleSet containsObject:holeIndexString];
+                
+                if(NO == isUsing)
                 {
-                    BOOL isUsing = YES;
-                    do
-                    {
-                        int holeIndex = arc4random()%[_positionArray count];
-                        NSString* holeIndexString = [NSString stringWithFormat:@"%d",holeIndex];
-                        isUsing = [_showingHoleSet containsObject:holeIndexString];
-                        
-                        if(NO == isUsing)
-                        {
-                            NSString* pointString = [_positionArray objectAtIndex:holeIndex];
-                            mole.position = CGPointFromString(pointString);
-                            [_showingHoleSet addObject:holeIndexString];
-                            mole.showingHoleIndex = holeIndex;
-                            [mole resetHP];
-                            [self addChild:mole];
-                            [self popMole:mole];
-                        }
-                        
-                    }while (isUsing);
+                    NSString* pointString = [_positionArray objectAtIndex:holeIndex];
+                    mole.position = CGPointFromString(pointString);
+                    [_showingHoleSet addObject:holeIndexString];
+                    mole.showingHoleIndex = holeIndex;
+                    mole.showTime = (self.currentWave.difficultyFactor - mole.speed)*0.1;
+                    [mole resetHP];
+                    [self addChild:mole];
+                    [self popMole:mole];
+                    
+                    [_moles removeObject:mole];
                 }
-            }
+                
+            }while (isUsing);
         }
     }
+
 }
 
 - (void)setTappable:(id)sender
 {
     RCMole* mole = (RCMole *)sender;
-    [mole setUserData:YES];
-    
+    mole.clickable = YES;
     mole.hpBar.visible = YES;
     
     [[SimpleAudioEngine sharedEngine] playEffect:@"hi.caf"];
@@ -285,14 +344,16 @@ static RCBeatMoleScene* sharedInstance = nil;
 - (void)unsetTappable:(id)sender
 {
     RCMole* mole = (RCMole *)sender;
-    [mole setUserData:NO];
+    mole.clickable = NO;
     mole.hpBar.visible = NO;
 }
 
 - (void)popMole:(RCMole *)mole
 {
-    if (self.score >= MAX_SCORE)
+    if (self.userHP <= 0 || self.isGameOver)
         return;
+    
+    [_showingMoleArray addObject:mole];
     
     CCCallFunc *setTappable = [CCCallFuncN actionWithTarget:self selector:@selector(setTappable:)];
     CCCallFunc *unsetTappable = [CCCallFuncN actionWithTarget:self selector:@selector(unsetTappable:)];
@@ -312,20 +373,36 @@ static RCBeatMoleScene* sharedInstance = nil;
     [_showingHoleSet removeObject:holeIndexString];
     mole.showingHoleIndex = -1;
     [mole removeFromParentAndCleanup:NO];
+    [_showingMoleArray removeObject:mole];
     
-//    RCMole* mole1 = [_moles lastObject];
-//    NSString* pointString = [_positionArray objectAtIndex:0];
-//    mole1.position = CGPointFromString(pointString);
-//    [_showingHoleSet addObject:@"0"];
-//    mole1.showingHoleIndex = 0;
-//    [self addChild:mole1];
-//    [self popMole:mole1];
+    if(0 == [_moles count])
+    {
+        self.currentWaveNumber++;
+        NSArray* moles = [self molesForWave:self.currentWaveNumber];
+        if([moles count])
+        {
+            if(_currentWave)
+            {
+                [self performSelector:@selector(addMoles:) withObject:moles afterDelay:_currentWave.interval];
+            }
+        }
+    }
 }
 
-- (void)timeOut:(id)sender
+- (void)addMoles:(id)argument
+{
+    NSArray* moles = (NSArray*)argument;
+    if([moles count])
+    {
+        [_moles removeAllObjects];
+        [_moles addObjectsFromArray:moles];
+    }
+}
+
+- (void)showResult
 {
     NSString* tipString = @"胜利过关！";
-    if(self.score < MAX_SCORE)
+    if(self.score < [RCLevel sharedInstance].starLevel0 || self.userHP <= 0)
     {
         tipString = @"挑战失败！";
     }
@@ -388,14 +465,14 @@ static RCBeatMoleScene* sharedInstance = nil;
 - (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event
 {
     CGPoint touchLocation = [self convertTouchToNodeSpace:touch];
-    for(RCMole* mole in self.moles)
+    for(RCMole* mole in self.showingMoleArray)
     {
-        if(NO == mole.userData)
-            continue;
-        
         if(CGRectContainsPoint(mole.boundingBox, touchLocation))
         {
-            mole.beatCount++;
+            if(NO == mole.clickable)
+                continue;
+            
+            mole.beatCount += [RCUser sharedInstance].ap;
             
             BOOL beatAnimation = NO;
             if(mole.teamType != [RCUser sharedInstance].teamType)
@@ -406,7 +483,7 @@ static RCBeatMoleScene* sharedInstance = nil;
                     self.rightTapCount++;
                     self.score += mole.coin;
                     [[SimpleAudioEngine sharedEngine] playEffect:@"yes.caf"];
-                    mole.userData = NO;
+                    mole.clickable = NO;
                     beatAnimation = YES;
                 }
             }
@@ -414,10 +491,12 @@ static RCBeatMoleScene* sharedInstance = nil;
             {
                 self.continuousRightTapCount = 0;
                 self.wrongTapCount++;
-                self.score -= mole.penalty;
+                self.userHP -= mole.penalty;
+                self.userHP = MAX(0,self.userHP);
                 [[SimpleAudioEngine sharedEngine] playEffect:@"no.caf"];
                 
-                mole.userData = NO;
+                mole.beatCount = 100000000;
+                mole.clickable = NO;
                 beatAnimation = YES;
             }
             

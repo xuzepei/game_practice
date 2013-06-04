@@ -16,6 +16,7 @@
 @property(nonatomic,retain)CCTMXTiledMap* tileMap;
 @property(nonatomic,retain)CCTMXLayer* bgLayer;
 @property(nonatomic,retain)CCSprite* player;
+@property(nonatomic,retain)CCTMXLayer* metaLayer;
 
 + (id)scene;
 + (RCTileGameScene*)sharedInstance;

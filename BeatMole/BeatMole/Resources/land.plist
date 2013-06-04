@@ -4,10 +4,10 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>land.png</key>
+            <key>land-568h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{1136,640}}</string>
+                <string>{{2,644},{1136,640}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -16,6 +16,19 @@
                 <string>{{0,0},{1136,640}}</string>
                 <key>sourceSize</key>
                 <string>{1136,640}</string>
+            </dict>
+            <key>land.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,2},{960,640}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{960,640}}</string>
+                <key>sourceSize</key>
+                <string>{960,640}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -27,7 +40,7 @@
             <key>size</key>
             <string>{1024,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:e5c2b595cf0c08c5903226b1614da00b$</string>
+            <string>$TexturePacker:SmartUpdate:20f386e522bacf21231f67ea22c17727$</string>
             <key>textureFileName</key>
             <string>land.png</string>
         </dict>

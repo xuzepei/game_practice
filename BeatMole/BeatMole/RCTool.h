@@ -10,6 +10,7 @@
 
 @class RCMainViewController;
 @class RCNavigationController;
+@class RCMole;
 @interface RCTool : NSObject
 
 + (NSString*)getUserDocumentDirectoryPath;
@@ -21,7 +22,9 @@
 + (BOOL)isIphone5;
 + (BOOL)isIpad;
 + (UIWindow*)frontWindow;
-+ (NSArray*)getMoleByTeamType:(TEAM_TYPE)type;
++ (NSArray*)getMolesByTeamType:(TEAM_TYPE)type;
++ (RCMole*)getMoleByTeamType:(TEAM_TYPE)teamType moleType:(NSString*)moleType;
++ (RCMole*)getMoleById:(NSString*)moleId;
 + (RCNavigationController*)getRootNavigationController;
 
 

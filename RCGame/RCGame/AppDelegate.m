@@ -96,7 +96,7 @@
 	//[director_ runWithScene: [RCLoadingLayer goToScene:ST_HELLOWORLD]];
     
     //Tile Game
-    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_TILEGAME]];
+    [director_ runWithScene:[RCLoadingLayer goToScene:ST_TILEGAME]];
     
     //Shoot Game
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_SHOOTGAME]];
@@ -131,7 +131,7 @@
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_SHIPGAMESCENE]];
     
     //JoyStick
-    [director_ runWithScene:[RCLoadingLayer goToScene:ST_JOYSTICK]];
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_JOYSTICK]];
 	
 	return YES;
 }

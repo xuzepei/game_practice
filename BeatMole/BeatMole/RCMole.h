@@ -18,16 +18,20 @@
 @property(nonatomic,retain)NSString* imageName;
 @property(assign)MOLE_TYPE type;
 @property(assign)CGFloat showTime;
+@property(assign)int id;
 @property(assign)int hp;
 @property(assign)int beatCount;
 @property(assign)int coin;
 @property(assign)int penalty;
+@property(assign)int speed;
+@property(assign)BOOL clickable;
 @property(assign)TEAM_TYPE teamType;
 @property(assign)int showingHoleIndex;
 @property(nonatomic,retain)CCProgressTimer* hpBar;
 @property(nonatomic,retain)CCAnimation* moveUpAnimation;
 @property(nonatomic,retain)CCAnimation* moveDownAnimation;
 @property(nonatomic,retain)CCAnimation* beatMoveDownAnimation;
+
 
 - (void)addHPBar;
 - (void)resetHP;

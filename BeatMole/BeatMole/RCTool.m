@@ -159,7 +159,7 @@
 	return NO;
 }
 
-+ (NSArray*)getMoleByTeamType:(TEAM_TYPE)type
++ (NSArray*)getMolesByTeamType:(TEAM_TYPE)type
 {
     NSMutableArray* moles = [[[NSMutableArray alloc] init] autorelease];
     
@@ -175,6 +175,7 @@
             break;
         
         i++;
+        NSString* id = [dict objectForKey:@"id"];
         NSString* name = [dict objectForKey:@"name"];
         //NSString* imageName = [dict objectForKey:@"imageName"];
         NSString* type = [dict objectForKey:@"type"];
@@ -183,12 +184,14 @@
         NSString* coin = [dict objectForKey:@"coin"];
         NSString* penalty = [dict objectForKey:@"penalty"];
         NSString* teamType = [dict objectForKey:@"teamType"];
+        NSString* speed = [dict objectForKey:@"speed"];
         
         if([teamType length] && [type length])
         {
             NSString* frameName = [NSString stringWithFormat:@"mole_%@_%@_0.png",teamType,type];
 
             RCMole* mole = [RCMole spriteWithSpriteFrameName:frameName];
+            mole.id = [id intValue];
             mole.showingHoleIndex = -1;
             mole.anchorPoint = ccp(0.5,0);
             mole.name = name;
@@ -199,29 +202,156 @@
             mole.coin = [coin intValue];
             mole.penalty = [penalty intValue];
             mole.teamType = [teamType intValue];
+            mole.speed = [speed intValue];
             [mole addHPBar];
             
             
             NSArray* indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",nil];
             frameName = [NSString stringWithFormat:@"mole_%@_%@_",teamType,type];
             mole.moveUpAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-            //mole.moveUpAnimation.restoreOriginalFrame = YES;
             
             indexArray = [NSArray arrayWithObjects:@"4",@"3",@"2",@"1",@"0",nil];
             frameName = [NSString stringWithFormat:@"mole_%@_%@_",teamType,type];
             mole.moveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-            //mole.moveDownAnimation.restoreOriginalFrame = YES;
             
             indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",nil];
             frameName = [NSString stringWithFormat:@"mole_beat_%@_%@_",teamType,type];
             mole.beatMoveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-            //mole.beatMoveDownAnimation.restoreOriginalFrame = YES;
             
             [moles addObject: mole];
         }
     }
     
     return moles;
+}
+
++ (RCMole*)getMoleByTeamType:(TEAM_TYPE)teamType moleType:(NSString*)moleType
+{
+    if(0 == [moleType length])
+        return nil;
+    
+    NSString* name = [NSString stringWithFormat:@"mole_config_team_%d",teamType];
+    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
+    NSArray* array = [NSArray arrayWithContentsOfFile:path];
+    for(NSDictionary* dict in array)
+    {
+        NSString* type = [dict objectForKey:@"type"];
+        if(NO == [moleType isEqualToString:type])
+            continue;
+        
+        NSString* id = [dict objectForKey:@"id"];
+        NSString* name = [dict objectForKey:@"name"];
+        NSString* hp = [dict objectForKey:@"hp"];
+        NSString* showTime = [dict objectForKey:@"showTime"];
+        NSString* coin = [dict objectForKey:@"coin"];
+        NSString* penalty = [dict objectForKey:@"penalty"];
+        NSString* teamType = [dict objectForKey:@"teamType"];
+        NSString* speed = [dict objectForKey:@"speed"];
+        
+        if([teamType length] && [type length])
+        {
+            NSString* frameName = [NSString stringWithFormat:@"mole_%@_%@_0.png",teamType,type];
+            
+            RCMole* mole = [RCMole spriteWithSpriteFrameName:frameName];
+            mole.id = [id intValue];
+            mole.showingHoleIndex = -1;
+            mole.anchorPoint = ccp(0.5,0);
+            mole.name = name;
+            mole.imageName = frameName;
+            mole.type = [type intValue];
+            mole.hp = [hp intValue];
+            mole.showTime = [showTime intValue];
+            mole.coin = [coin intValue];
+            mole.penalty = [penalty intValue];
+            mole.teamType = [teamType intValue];
+            mole.speed = [speed intValue];
+            [mole addHPBar];
+            
+            
+            NSArray* indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",nil];
+            frameName = [NSString stringWithFormat:@"mole_%@_%@_",teamType,type];
+            mole.moveUpAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
+            
+            indexArray = [NSArray arrayWithObjects:@"4",@"3",@"2",@"1",@"0",nil];
+            frameName = [NSString stringWithFormat:@"mole_%@_%@_",teamType,type];
+            mole.moveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
+            
+            indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",nil];
+            frameName = [NSString stringWithFormat:@"mole_beat_%@_%@_",teamType,type];
+            mole.beatMoveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
+            
+            return mole;
+        }
+    }
+    
+    return nil;
+}
+
++ (RCMole*)getMoleById:(NSString*)moleId
+{
+    if(0 == [moleId length])
+        return nil;
+    
+    NSArray* teamArray = [NSArray arrayWithObjects:@"0",@"1",nil];
+    for(NSString* teamType in teamArray)
+    {
+        NSString* name = [NSString stringWithFormat:@"mole_config_team_%d",[teamType intValue]];
+        
+        NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
+        NSArray* array = [NSArray arrayWithContentsOfFile:path];
+        for(NSDictionary* dict in array)
+        {
+            NSString* id = [dict objectForKey:@"id"];
+            if(NO == [id isEqualToString:moleId])
+                continue;
+            
+            NSString* name = [dict objectForKey:@"name"];
+            NSString* type = [dict objectForKey:@"type"];
+            NSString* hp = [dict objectForKey:@"hp"];
+            NSString* showTime = [dict objectForKey:@"showTime"];
+            NSString* coin = [dict objectForKey:@"coin"];
+            NSString* penalty = [dict objectForKey:@"penalty"];
+            teamType = [dict objectForKey:@"teamType"];
+            NSString* speed = [dict objectForKey:@"speed"];
+            
+            if([teamType length] && [type length])
+            {
+                NSString* frameName = [NSString stringWithFormat:@"mole_%@_%@_0.png",teamType,type];
+                
+                RCMole* mole = [RCMole spriteWithSpriteFrameName:frameName];
+                mole.id = [id intValue];
+                mole.showingHoleIndex = -1;
+                mole.anchorPoint = ccp(0.5,0);
+                mole.name = name;
+                mole.imageName = frameName;
+                mole.type = [type intValue];
+                mole.hp = [hp intValue];
+                mole.showTime = [showTime intValue];
+                mole.coin = [coin intValue];
+                mole.penalty = [penalty intValue];
+                mole.teamType = [teamType intValue];
+                mole.speed = [speed intValue];
+                [mole addHPBar];
+                
+                
+                NSArray* indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",nil];
+                frameName = [NSString stringWithFormat:@"mole_%@_%@_",teamType,type];
+                mole.moveUpAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
+                
+                indexArray = [NSArray arrayWithObjects:@"4",@"3",@"2",@"1",@"0",nil];
+                frameName = [NSString stringWithFormat:@"mole_%@_%@_",teamType,type];
+                mole.moveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
+                
+                indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",nil];
+                frameName = [NSString stringWithFormat:@"mole_beat_%@_%@_",teamType,type];
+                mole.beatMoveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
+                
+                return mole;
+            }
+        }
+    }
+
+    return nil;
 }
 
 + (RCNavigationController*)getRootNavigationController

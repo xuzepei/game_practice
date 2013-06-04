@@ -22,6 +22,8 @@
 		092939CD174DF79D0078360E /* mole_team_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 092939C9174DF79D0078360E /* mole_team_1.png */; };
 		092939D8174E1C930078360E /* mole_config_team_0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 092939D6174E1C930078360E /* mole_config_team_0.plist */; };
 		092939D9174E1C930078360E /* mole_config_team_1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 092939D7174E1C930078360E /* mole_config_team_1.plist */; };
+		092E2E59175D7CD1003035DC /* RCLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 092E2E58175D7CD1003035DC /* RCLevel.m */; };
+		092E2E5C175D8197003035DC /* RCWave.m in Sources */ = {isa = PBXBuildFile; fileRef = 092E2E5B175D8197003035DC /* RCWave.m */; };
 		0933944A17558F6900221C93 /* RCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0933944917558F6900221C93 /* RCNavigationController.m */; };
 		0933944D175599B400221C93 /* RCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0933944C175599B400221C93 /* RCSettingsViewController.m */; };
 		093394501755A34800221C93 /* qq_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0933944E1755A34800221C93 /* qq_icon.png */; };
@@ -310,6 +312,10 @@
 		092939C9174DF79D0078360E /* mole_team_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mole_team_1.png; path = Resources/mole_team_1.png; sourceTree = "<group>"; };
 		092939D6174E1C930078360E /* mole_config_team_0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = mole_config_team_0.plist; sourceTree = "<group>"; };
 		092939D7174E1C930078360E /* mole_config_team_1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = mole_config_team_1.plist; sourceTree = "<group>"; };
+		092E2E57175D7CD1003035DC /* RCLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLevel.h; sourceTree = "<group>"; };
+		092E2E58175D7CD1003035DC /* RCLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLevel.m; sourceTree = "<group>"; };
+		092E2E5A175D8197003035DC /* RCWave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCWave.h; sourceTree = "<group>"; };
+		092E2E5B175D8197003035DC /* RCWave.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCWave.m; sourceTree = "<group>"; };
 		0933944817558F6900221C93 /* RCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCNavigationController.h; sourceTree = "<group>"; };
 		0933944917558F6900221C93 /* RCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCNavigationController.m; sourceTree = "<group>"; };
 		0933944B175599B400221C93 /* RCSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCSettingsViewController.h; sourceTree = "<group>"; };
@@ -1283,6 +1289,10 @@
 		09ECFE19174DA33800CE110E /* BeatMole */ = {
 			isa = PBXGroup;
 			children = (
+				092E2E5A175D8197003035DC /* RCWave.h */,
+				092E2E5B175D8197003035DC /* RCWave.m */,
+				092E2E57175D7CD1003035DC /* RCLevel.h */,
+				092E2E58175D7CD1003035DC /* RCLevel.m */,
 				091EFB4817574CD80005A2A5 /* RCHPBar.h */,
 				091EFB4917574CD90005A2A5 /* RCHPBar.m */,
 				093394521755A44800221C93 /* RCBindCell.h */,
@@ -2185,6 +2195,8 @@
 				0933944D175599B400221C93 /* RCSettingsViewController.m in Sources */,
 				093394541755A44800221C93 /* RCBindCell.m in Sources */,
 				091EFB4A17574CD90005A2A5 /* RCHPBar.m in Sources */,
+				092E2E59175D7CD1003035DC /* RCLevel.m in Sources */,
+				092E2E5C175D8197003035DC /* RCWave.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

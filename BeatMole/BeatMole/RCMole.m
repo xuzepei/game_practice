@@ -64,7 +64,15 @@
 {
     if(self.hpBar)
     {
-        [self.hpBar setPercentage:100*(self.hp - self.beatCount) / (float)self.hp];
+        if(self.beatCount >= self.hp)
+        {
+            [self.hpBar setPercentage:0];
+            return;
+        }
+        else
+        {
+            [self.hpBar setPercentage:100*(self.hp - self.beatCount) / (float)self.hp];
+        }
     }
 }
 

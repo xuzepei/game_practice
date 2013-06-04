@@ -12,6 +12,7 @@
 
 @property(nonatomic,retain)NSString* nickname;
 @property(assign)TEAM_TYPE teamType;
+@property(assign)int ap;
 
 + (RCUser*)sharedInstance;
 
