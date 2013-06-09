@@ -34,8 +34,8 @@
 - (BOOL)isCUAuth;
 - (void)CULogout;
 
-- (void)CUSendWithText:(NSString *)text;
-- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image;
+- (void)CUSendWithText:(NSString *)text delegate:(id)delegate;
+- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image delegate:(id)delegate;
 - (void)CUSendWithText:(NSString *)text andImageURLString:(NSString *)imageURLString;
 
 - (void)CUGetFollowersWithPage:(NSUInteger)page

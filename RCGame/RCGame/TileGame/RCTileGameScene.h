@@ -17,6 +17,9 @@
 @property(nonatomic,retain)CCTMXLayer* bgLayer;
 @property(nonatomic,retain)CCSprite* player;
 @property(nonatomic,retain)CCTMXLayer* metaLayer;
+@property(nonatomic,retain)CCTMXLayer* fgLayer;
+@property(nonatomic,retain)CCTMXLayer* foodLayer;
+@property(assign)BOOL mode;
 
 + (id)scene;
 + (RCTileGameScene*)sharedInstance;

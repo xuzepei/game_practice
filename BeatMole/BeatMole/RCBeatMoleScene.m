@@ -15,16 +15,17 @@
 #import "RCSelectLevelScene.h"
 #import "RCLevel.h"
 #import "RCWave.h"
+#import "RCNavigationController.h"
 
 #define MAX_SCORE 300
 
 static RCBeatMoleScene* sharedInstance = nil;
 @implementation RCBeatMoleScene
 
-+ (id)scene
++ (id)scene:(int)levelIndex
 {
     CCScene* scene = [CCScene node];
-    RCBeatMoleScene* layer = [RCBeatMoleScene node];
+    RCBeatMoleScene* layer = [[[RCBeatMoleScene alloc] initWithLevelIndex:levelIndex] autorelease];
     [scene addChild:layer];
     return scene;
 }
@@ -34,23 +35,28 @@ static RCBeatMoleScene* sharedInstance = nil;
     return sharedInstance;
 }
 
-- (id)init
+- (id)initWithLevelIndex:(int)levelIndex
 {
     if(self = [super init])
     {
         sharedInstance = self;
         self.isTouchEnabled = YES;
         CGSize winSize = WIN_SIZE;
+        self.levelIndex = levelIndex;
+        
+        memset(_showCount, 0, sizeof(int)*20);
+        memset(_killCount, 0, sizeof(int)*20);
+        
         _moles = [[NSMutableArray alloc] init];
         _showingHoleSet = [[NSMutableSet alloc] init];
         _showingMoleArray = [[NSMutableArray alloc] init];
         
+        
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"land.plist"];
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_0.plist"];
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_team_1.plist"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_animation.plist"];
 
         RCLevel* level = [RCLevel sharedInstance];
-        [level updateByLevelNumber:0];
+        [level updateByLevelNumber:self.levelIndex];
         self.userHP = level.userHP;
         
         //返回按钮
@@ -354,6 +360,7 @@ static RCBeatMoleScene* sharedInstance = nil;
         return;
     
     [_showingMoleArray addObject:mole];
+    _showCount[mole.id]++;
     
     CCCallFunc *setTappable = [CCCallFuncN actionWithTarget:self selector:@selector(setTappable:)];
     CCCallFunc *unsetTappable = [CCCallFuncN actionWithTarget:self selector:@selector(unsetTappable:)];
@@ -401,18 +408,39 @@ static RCBeatMoleScene* sharedInstance = nil;
 
 - (void)showResult
 {
+    int star = 0;
     NSString* tipString = @"胜利过关！";
     if(self.score < [RCLevel sharedInstance].starLevel0 || self.userHP <= 0)
     {
         tipString = @"挑战失败！";
     }
+    else if(self.userHP > 0)
+    {
+        if(self.score >= [RCLevel sharedInstance].starLevel2)
+            star = 3;
+        else if(self.score >= [RCLevel sharedInstance].starLevel1)
+            star = 2;
+        else if(self.score >= [RCLevel sharedInstance].starLevel0)
+            star = 1;
+    }
     
-    CGSize screenSize = WIN_SIZE;
-    CCLabelTTF* gameOverLabel = [CCLabelTTF labelWithString:tipString fontName:@"Marker Felt" fontSize:60.0];
-    gameOverLabel.position = ccp(screenSize.width/2, screenSize.height/2);
-    gameOverLabel.scale = 0.1;
-    [self addChild:gameOverLabel z:10];
-    [gameOverLabel runAction:[CCScaleTo actionWithDuration:0.5 scale:1.0]];
+    [self stop];
+    
+    [RCTool saveLevelResult:self.levelIndex star:star coin:self.score hp:self.userHP rightKillCount:self.rightTapCount wrongKillCount:self.wrongTapCount continuousRightKillCount:self.continuousRightTapCount showCount:_showCount killCount:_killCount idCount:20];
+    
+
+    UIView* resultView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, [RCTool getScreenSize].height, [RCTool getScreenSize].width)] autorelease];
+    resultView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+    
+    RCNavigationController* navigationController = [RCTool getRootNavigationController];
+    [navigationController.view addSubview:resultView];
+    
+//    CGSize screenSize = WIN_SIZE;
+//    CCLabelTTF* gameOverLabel = [CCLabelTTF labelWithString:tipString fontName:@"Marker Felt" fontSize:60.0];
+//    gameOverLabel.position = ccp(screenSize.width/2, screenSize.height/2);
+//    gameOverLabel.scale = 0.1;
+//    [self addChild:gameOverLabel z:10];
+//    [gameOverLabel runAction:[CCScaleTo actionWithDuration:0.5 scale:1.0]];
     
     self.isGameOver = YES;
 }
@@ -471,7 +499,7 @@ static RCBeatMoleScene* sharedInstance = nil;
         {
             if(NO == mole.clickable)
                 continue;
-            
+
             mole.beatCount += [RCUser sharedInstance].ap;
             
             BOOL beatAnimation = NO;
@@ -482,6 +510,8 @@ static RCBeatMoleScene* sharedInstance = nil;
                     self.continuousRightTapCount++;
                     self.rightTapCount++;
                     self.score += mole.coin;
+                    _killCount[mole.id]++;
+                    
                     [[SimpleAudioEngine sharedEngine] playEffect:@"yes.caf"];
                     mole.clickable = NO;
                     beatAnimation = YES;
@@ -493,6 +523,8 @@ static RCBeatMoleScene* sharedInstance = nil;
                 self.wrongTapCount++;
                 self.userHP -= mole.penalty;
                 self.userHP = MAX(0,self.userHP);
+                _killCount[mole.id]++;
+                
                 [[SimpleAudioEngine sharedEngine] playEffect:@"no.caf"];
                 
                 mole.beatCount = 100000000;

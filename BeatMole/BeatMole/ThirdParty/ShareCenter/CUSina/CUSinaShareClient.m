@@ -202,13 +202,15 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
     return;
 }
 
-- (void)CUSendWithText:(NSString *)text
+- (void)CUSendWithText:(NSString *)text delegate:(id)delegate
 {
-    return [self CUSendWithText:text andImage:nil];
+    return [self CUSendWithText:text andImage:nil delegate:delegate];
 }
 
-- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image
+- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image delegate:(id)delegate
 {
+    self.myDelegate = delegate;
+    
     if ([text length] == 0) {
         return;
     }
@@ -688,12 +690,24 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
 
 - (void)engine:(WBEngine *)wbEngine requestDidFailWithError:(NSError *)error
 {
-    [self CUNotifyShareFailed:self withError:error];
+    //[self CUNotifyShareFailed:self withError:error];
+    
+    CCLOG(@"error:%@",[error description]);
+    
+    if(self.myDelegate && [self.myDelegate respondsToSelector:@selector(sendTextFailed:)])
+    {
+        [self.myDelegate sendTextFailed:nil];
+    }
 }
 
 - (void)engine:(WBEngine *)wbEngine requestDidSucceedWithResult:(id)result
 {
-    [self CUNotifyShareSucceed:self];
+    //[self CUNotifyShareSucceed:self];
+    
+    if(self.myDelegate && [self.myDelegate respondsToSelector:@selector(sendTextSucceeded:)])
+    {
+        [self.myDelegate sendTextSucceeded:nil];
+    }
 }
 
 @end

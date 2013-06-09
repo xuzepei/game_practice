@@ -26,6 +26,17 @@
 + (RCMole*)getMoleByTeamType:(TEAM_TYPE)teamType moleType:(NSString*)moleType;
 + (RCMole*)getMoleById:(NSString*)moleId;
 + (RCNavigationController*)getRootNavigationController;
++ (void)saveLevelResult:(int)levelIndex
+                   star:(int)star
+                   coin:(int)coin
+                     hp:(int)hp
+         rightKillCount:(int)rightKillCount
+         wrongKillCount:(int)wrongKillCount
+continuousRightKillCount:(int)continuousRightKillCount
+              showCount:(int*)showCount
+              killCount:(int*)killCount
+                idCount:(int)idCount;
++ (NSDictionary*)getLevelResultByIndex:(int)levelIndex;
 
 
 @end

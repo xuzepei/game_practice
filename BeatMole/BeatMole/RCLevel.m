@@ -48,106 +48,32 @@
 
 - (void)updateByLevelNumber:(int)levelNumber
 {
-    switch (levelNumber) {
-        case 0:
+    NSString* name = [NSString stringWithFormat:@"level_%d",levelNumber];
+    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
+    NSDictionary* levelInfo = [NSDictionary dictionaryWithContentsOfFile:path];
+    if(nil == levelInfo)
+        return;
+    
+    [_waveArray removeAllObjects];
+    
+    self.userHP = [[levelInfo objectForKey:@"userHP"] intValue];
+    self.starLevel0 = [[levelInfo objectForKey:@"starLevel0"] intValue];
+    self.starLevel1 = [[levelInfo objectForKey:@"starLevel1"] intValue];
+    self.starLevel2 = [[levelInfo objectForKey:@"starLevel2"] intValue];
+    
+    NSArray* waves = [levelInfo objectForKey:@"waves"];
+    if(waves && [waves isKindOfClass:[NSArray class]])
+    {
+        for(NSDictionary* waveDict in waves)
         {
-            self.userHP = 10;
-            self.starLevel0 = 495;
-            self.starLevel1 = 660;
-            self.starLevel2 = 825;
-            
-            RCWave* wave0 = [[[RCWave alloc] init] autorelease];
-            wave0.interval = 0;
-            wave0.difficultyFactor = 100;
-            wave0.wrongShowNumber = 3;
-            wave0.maxShowNumber = 1;
-            
-            NSMutableDictionary* assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"0" forKey:@"type"];
-            [assignment setObject:@"10" forKey:@"count"];
-            [wave0.assignmentArray addObject:assignment];
-            [_waveArray addObject:wave0];
-            
-            RCWave* wave1 = [[[RCWave alloc] init] autorelease];
-            wave1.interval = 0;
-            wave1.difficultyFactor = 100;
-            wave1.wrongShowNumber = 3;
-            wave1.maxShowNumber = 1;
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"0" forKey:@"type"];
-            [assignment setObject:@"5" forKey:@"count"];
-            [wave1.assignmentArray addObject:assignment];
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"1" forKey:@"type"];
-            [assignment setObject:@"5" forKey:@"count"];
-            [wave1.assignmentArray addObject:assignment];
-
-            [_waveArray addObject:wave1];
-            
-            
-            RCWave* wave2 = [[[RCWave alloc] init] autorelease];
-            wave2.interval = 0;
-            wave2.difficultyFactor = 100;
-            wave2.wrongShowNumber = 5;
-            wave2.maxShowNumber = 1;
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"0" forKey:@"type"];
-            [assignment setObject:@"10" forKey:@"count"];
-            [wave2.assignmentArray addObject:assignment];
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"1" forKey:@"type"];
-            [assignment setObject:@"5" forKey:@"count"];
-            [wave2.assignmentArray addObject:assignment];
-            
-            [_waveArray addObject:wave2];
-            
-            
-            
-            RCWave* wave3 = [[[RCWave alloc] init] autorelease];
-            wave3.interval = 0;
-            wave3.difficultyFactor = 100;
-            wave3.wrongShowNumber = 5;
-            wave3.maxShowNumber = 2;
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"0" forKey:@"type"];
-            [assignment setObject:@"10" forKey:@"count"];
-            [wave3.assignmentArray addObject:assignment];
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"1" forKey:@"type"];
-            [assignment setObject:@"10" forKey:@"count"];
-            [wave3.assignmentArray addObject:assignment];
-            
-            [_waveArray addObject:wave3];
-            
-            
-            RCWave* wave4 = [[[RCWave alloc] init] autorelease];
-            wave4.interval = 0;
-            wave4.difficultyFactor = 100;
-            wave4.wrongShowNumber = 5;
-            wave4.maxShowNumber = 2;
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"0" forKey:@"type"];
-            [assignment setObject:@"10" forKey:@"count"];
-            [wave4.assignmentArray addObject:assignment];
-            
-            assignment = [[[NSMutableDictionary alloc] init] autorelease];
-            [assignment setObject:@"1" forKey:@"type"];
-            [assignment setObject:@"15" forKey:@"count"];
-            [wave4.assignmentArray addObject:assignment];
-            
-            [_waveArray addObject:wave4];
-            
-            break;
+            RCWave* wave = [[[RCWave alloc] init] autorelease];
+            wave.interval = [[waveDict objectForKey:@"interval"] floatValue];
+            wave.difficultyFactor = [[waveDict objectForKey:@"difficultyFactor"] floatValue];
+            wave.wrongShowNumber = [[waveDict objectForKey:@"wrongShowNumber"] intValue];
+            wave.maxShowNumber = [[waveDict objectForKey:@"maxShowNumber"] intValue];
+            [wave.assignmentArray addObjectsFromArray:[waveDict objectForKey:@"assignments"]];
+            [_waveArray addObject:wave];
         }
-        default:
-            break;
     }
 }
 

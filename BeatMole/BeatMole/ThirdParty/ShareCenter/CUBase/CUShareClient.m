@@ -35,6 +35,7 @@
 {
     self.viewClient = nil;
     self.delegate = nil;
+    self.myDelegate = nil;
     
     [multicastMessageDelegate removeAllDelegates];
     

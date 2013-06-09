@@ -7,21 +7,65 @@
   <image source="meta_tiles.png" width="67" height="34"/>
   <tile id="0">
    <properties>
-    <property name="Collidable" value="true"/>
+    <property name="collidable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="collectable" value="true"/>
    </properties>
   </tile>
  </tileset>
  <layer name="background" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJztl90OgjAMhfsGXKsJYFCCouj7P527wATn2F93YJBefBcEVnrasw5KIipHDoojg9MkForK45mz4qK4R3BVNInzCaHWdJhy8a1BY4i5Bt9cfPLWn5mrAdI/Nh0Pmve8bW88A3S04H7c6N/3/eS+a4/0jvi2GqO1DYpiBPkersdaB6Wmo56sfVlYS7ONVP0oEoOMPaxca0SNuJ7fEqg5Zdu76D2szxdfKOF7TXMulI6pqQbW2MSbWbvU/RDC6OjXc2vjk0uI50Jm997mPEJzTl4ReL1Exasca2PPDM5ZYwL9T8H55iFwbij0Hrl0xNZHX5faG6n6H+oJk45c/31T1CMW0q63enYjdcTGiumTrgOV29L9WJKlZhi69jnOYkEQ8oUyyEHYH5RBDqJDdOSK6MgL0SGg+AAmVSQM
+   eJzt100OwiAQBWBu0LWaEIw/qVar9z+dmHSBFMECwyB9i29lSnnDDKZSCCEnG22bYGesxWmvHbVrhJN2YNy7snLE7sV8VkWukfM8cuTg9t7LTXzved9s3BfkOBPnuIh53w/G76EZGRLeTZ1t1LoJd7+E6uAjrRzKePbhwZ3LJdd5dJlRrj0y15qiRmtCdU/5Zpd6hu37pWQtfffcUn1iJlU4/zOxdiX3CnO9+Ow5br/sJaXngP58AHxi5zf33FN/U9T83VLL2cbWx36uxv8EV7ZQT7hytNJDreRoHc6JR4132JpzAAAAAAAA/KsX4rgl9Q==
+  </data>
+ </layer>
+ <layer name="food" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwzEJAAAMA7A6mX+X01DomUASAAAAFq4IAAAAAADA3gNF2gFW
+  </data>
+ </layer>
+ <layer name="meta" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1EEKwCAMBEC/ZP//uB4rRaEWaWOYgYDHbBIs5VIXVAQ756i399te/s7RypZjdCuR76qVJUdP5N5as/N9uh9isAt6dv5bszBjvnJMFAAAAAAAAOudD8QVfA==
   </data>
  </layer>
  <objectgroup name="objects" width="50" height="50">
-  <object name="player_point" x="99" y="292" width="27" height="25"/>
+  <object name="player" x="99" y="292" width="27" height="25">
+   <properties>
+    <property name="player" value="1"/>
+   </properties>
+  </object>
+  <object name="enemy" x="640" y="192" width="27" height="25">
+   <properties>
+    <property name="enemy" value="1"/>
+   </properties>
+  </object>
+  <object name="enemy" x="544" y="352" width="27" height="25">
+   <properties>
+    <property name="enemy" value="1"/>
+   </properties>
+  </object>
+  <object name="enemy" x="256" y="448" width="27" height="25">
+   <properties>
+    <property name="enemy" value="1"/>
+   </properties>
+  </object>
+  <object name="enemy" x="448" y="256" width="27" height="25">
+   <properties>
+    <property name="enemy" value="1"/>
+   </properties>
+  </object>
+  <object name="enemy" x="320" y="128" width="27" height="25">
+   <properties>
+    <property name="enemy" value="1"/>
+   </properties>
+  </object>
+  <object name="enemy" x="448" y="448" width="27" height="25">
+   <properties>
+    <property name="enemy" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
- <layer name="meta" width="50" height="50">
-  <data encoding="base64" compression="zlib">
-   eJzt1EEKgDAMBMB+qf//nEeDVFARmqYzUOgxm4S0duo/vAxWztEv/6+1zM4RVctxtyuZ9yqqkmMkc23R2/4+nQ85mAUjK9/WKvQYAAAAAAAA9nAAB2MTVg==
-  </data>
- </layer>
 </map>

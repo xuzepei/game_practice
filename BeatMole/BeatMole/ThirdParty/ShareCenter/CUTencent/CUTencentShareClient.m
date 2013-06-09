@@ -191,13 +191,15 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
     return;
 }
 
-- (void)CUSendWithText:(NSString *)text
+- (void)CUSendWithText:(NSString *)text delegate:(id)delegate
 {
-    return [self CUSendWithText:text andImage:nil];
+    return [self CUSendWithText:text andImage:nil delegate:delegate];
 }
 
-- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image
+- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image delegate:(id)delegate
 {
+    self.myDelegate = delegate;
+    
     if ([text length] == 0) {
         return;
     }
@@ -230,13 +232,24 @@ static NSData *HMAC_SHA1(NSString *data, NSString *key) {
     [request setCompleteBlock: ^(NSString * responseString){
         DebugLog(@"++++++ Tecent Send Text Succeed: %@", responseString);
         
-        [self CUNotifyShareSucceed:self];
+        //[self CUNotifyShareSucceed:self];
+        
+        if(self.myDelegate && [self.myDelegate respondsToSelector:@selector(sendTextSucceeded:)])
+        {
+            [self.myDelegate sendTextSucceeded:nil];
+        }
     }];
     
     [request setFailureBlock: ^(NSError * error){
         DebugLog(@"++++++ Tecent Get Followers Error: %@", error);
         
-        [self CUNotifyAuthFailed:self withError:error];
+        //[self CUNotifyAuthFailed:self withError:error];
+        
+        if(self.myDelegate && [self.myDelegate respondsToSelector:@selector(sendTextFailed:)])
+        {
+            [self.myDelegate sendTextFailed:nil];
+        }
+        
     }];
     
     [fullParams release];

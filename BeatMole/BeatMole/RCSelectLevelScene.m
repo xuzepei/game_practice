@@ -87,6 +87,8 @@ static RCSelectLevelScene* sharedInstance = nil;
 {
     CCMenuItem* menuItem = (CCMenuItem*)sender;
     CCLOG(@"%d",menuItem.tag);
+    
+    CCScene* scene = nil;
     switch (menuItem.tag)
     {
         case T_SELECT_LEVEL_BACKBUTTON:
@@ -98,13 +100,71 @@ static RCSelectLevelScene* sharedInstance = nil;
         }
         case T_SELECT_LEVEL_MENUITEM0:
         {
-            CCScene* scene = [RCBeatMoleScene scene];
-            [DIRECTOR replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:scene withColor:ccWHITE]];
+            scene = [RCBeatMoleScene scene:0];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM1:
+        {
+            scene = [RCBeatMoleScene scene:1];
+
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM2:
+        {
+            scene = [RCBeatMoleScene scene:2];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM3:
+        {
+            scene = [RCBeatMoleScene scene:3];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM4:
+        {
+            scene = [RCBeatMoleScene scene:4];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM5:
+        {
+            scene = [RCBeatMoleScene scene:5];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM6:
+        {
+            scene = [RCBeatMoleScene scene:6];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM7:
+        {
+            scene = [RCBeatMoleScene scene:7];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM8:
+        {
+            scene = [RCBeatMoleScene scene:8];
+            
+            break;
+        }
+        case T_SELECT_LEVEL_MENUITEM9:
+        {
+            scene = [RCBeatMoleScene scene:9];
             
             break;
         }
         default:
             break;
+    }
+    
+    if(scene)
+    {
+        [DIRECTOR replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:scene withColor:ccWHITE]];
     }
 }
 

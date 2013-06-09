@@ -39,8 +39,8 @@ CUShareClientType;
 - (void)CUOpenAuthViewInViewController:(UIViewController *)vc;
 - (void)CULogout;
 
-- (void)CUSendWithText:(NSString *)text;
-- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image;
+- (void)CUSendWithText:(NSString *)text delegate:(id)delegate;
+- (void)CUSendWithText:(NSString *)text andImage:(UIImage *)image delegate:(id)delegate;
 - (void)CUSendWithText:(NSString *)text andImageURLString:(NSString *)imageURLString;
 
 @optional
@@ -98,6 +98,7 @@ CUShareClientType;
 @property (nonatomic, readonly) NSString * accessToken;
 @property (nonatomic, readonly) NSTimeInterval expireTime;
 @property (nonatomic, readonly) NSString * nickname;
+@property (assign)id myDelegate;
 
 - (void)addDelegate:(id)aDelegate;
 - (void)removeDelegate:(id)aDelegate;

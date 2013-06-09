@@ -32,6 +32,10 @@
 		091377EB16ACE9010001D7D4 /* RCGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 091377EA16ACE9010001D7D4 /* RCGameScene.m */; };
 		091377F116ACF3370001D7D4 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 091377F016ACF3370001D7D4 /* Default@2x.png */; };
 		091377F316ACF3480001D7D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 091377F216ACF3480001D7D4 /* Default-568h@2x.png */; };
+		091E8B991762BCB100193230 /* meta_tiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 091E8B981762BCB100193230 /* meta_tiles.png */; };
+		091E8B9D1763115400193230 /* enemy.png in Resources */ = {isa = PBXBuildFile; fileRef = 091E8B9A1763115400193230 /* enemy.png */; };
+		091E8B9E1763115400193230 /* projectile_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 091E8B9B1763115400193230 /* projectile_button_off.png */; };
+		091E8B9F1763115400193230 /* projectile_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 091E8B9C1763115400193230 /* projectile_button_on.png */; };
 		092621791740BC7C00E97855 /* game-art.plist in Resources */ = {isa = PBXBuildFile; fileRef = 092621771740BC7C00E97855 /* game-art.plist */; };
 		0926217A1740BC7C00E97855 /* game-art.png in Resources */ = {isa = PBXBuildFile; fileRef = 092621781740BC7C00E97855 /* game-art.png */; };
 		0926217D1740C50B00E97855 /* CCAnimation+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0926217C1740C50B00E97855 /* CCAnimation+Helper.m */; };
@@ -416,6 +420,10 @@
 		091377EA16ACE9010001D7D4 /* RCGameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCGameScene.m; sourceTree = "<group>"; };
 		091377F016ACF3370001D7D4 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		091377F216ACF3480001D7D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		091E8B981762BCB100193230 /* meta_tiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = meta_tiles.png; path = Resources/meta_tiles.png; sourceTree = "<group>"; };
+		091E8B9A1763115400193230 /* enemy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = enemy.png; path = Resources/enemy.png; sourceTree = "<group>"; };
+		091E8B9B1763115400193230 /* projectile_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = projectile_button_off.png; path = Resources/projectile_button_off.png; sourceTree = "<group>"; };
+		091E8B9C1763115400193230 /* projectile_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = projectile_button_on.png; path = Resources/projectile_button_on.png; sourceTree = "<group>"; };
 		092621771740BC7C00E97855 /* game-art.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "game-art.plist"; path = "Resources/game-art.plist"; sourceTree = "<group>"; };
 		092621781740BC7C00E97855 /* game-art.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "game-art.png"; path = "Resources/game-art.png"; sourceTree = "<group>"; };
 		0926217B1740C50B00E97855 /* CCAnimation+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CCAnimation+Helper.h"; sourceTree = "<group>"; };
@@ -1193,6 +1201,10 @@
 		092DD94716084EC40078ED9E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				091E8B9A1763115400193230 /* enemy.png */,
+				091E8B9B1763115400193230 /* projectile_button_off.png */,
+				091E8B9C1763115400193230 /* projectile_button_on.png */,
+				091E8B981762BCB100193230 /* meta_tiles.png */,
 				095F3AE7174F101800AE54CD /* hole.png */,
 				095F3AE5174F0F0900AE54CD /* land.png */,
 				095F3ADD174EFED400AE54CD /* calendar1.png */,
@@ -2295,6 +2307,10 @@
 				095F3AE4174EFED400AE54CD /* calendarmask.png in Resources */,
 				095F3AE6174F0F0900AE54CD /* land.png in Resources */,
 				095F3AE8174F101800AE54CD /* hole.png in Resources */,
+				091E8B991762BCB100193230 /* meta_tiles.png in Resources */,
+				091E8B9D1763115400193230 /* enemy.png in Resources */,
+				091E8B9E1763115400193230 /* projectile_button_off.png in Resources */,
+				091E8B9F1763115400193230 /* projectile_button_on.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

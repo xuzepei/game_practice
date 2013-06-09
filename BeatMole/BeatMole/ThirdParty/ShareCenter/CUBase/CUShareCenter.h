@@ -19,8 +19,8 @@
 
 + (void)destory:(CUShareCenter *)instance;
 
-- (void)sendWithText:(NSString *)text;
-- (void)sendWithText:(NSString *)text andImage:(UIImage *)image;
+- (void)sendWithText:(NSString *)text delegate:(id)delegate;
+- (void)sendWithText:(NSString *)text andImage:(UIImage *)image delegate:(id)delegate;
 - (void)sendWithText:(NSString *)text andImageURLString:(NSString *)imageURLString;
 
 - (BOOL)isBind;
