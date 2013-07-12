@@ -13,8 +13,6 @@
 #import "HelloWorldLayer.h"
 #import "RCGameScene.h"
 #import "RCMultiLayerScene.h"
-#import "RCEarthLayer.h"
-#import "RCEarthScene.h"
 
 @implementation AppController
 
@@ -96,7 +94,7 @@
 	//[director_ runWithScene: [RCLoadingLayer goToScene:ST_HELLOWORLD]];
     
     //Tile Game
-    [director_ runWithScene:[RCLoadingLayer goToScene:ST_TILEGAME]];
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_TILEGAME]];
     
     //Shoot Game
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_SHOOTGAME]];
@@ -132,6 +130,9 @@
     
     //JoyStick
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_JOYSTICK]];
+    
+    //Particles
+    [director_ runWithScene:[RCLoadingLayer goToScene:ST_PARTICLES]];
 	
 	return YES;
 }
@@ -190,28 +191,10 @@
 
 - (void) dealloc
 {
-    self.earthViewController = nil;
-    
 	[window_ release];
 	[navController_ release];
 
 	[super dealloc];
-}
-
-#pragma mark Earth View Controller
-
-- (void)initEarthViewController
-{
-    if(nil == _earthViewController)
-    {
-        _earthViewController = CC3DeviceCameraOverlayUIViewController.sharedDirector;
-        _earthViewController.supportedInterfaceOrientations = UIInterfaceOrientationMaskAll;
-        _earthViewController.viewShouldUseStencilBuffer = NO;		// Set to YES if using shadow volumes
-        _earthViewController.viewPixelSamples = 1;					// Set to 4 for antialiasing multisampling
-        _earthViewController.animationInterval = (1.0f / 60);
-        _earthViewController.displayStats = YES;
-        [_earthViewController enableRetinaDisplay: YES];
-    }
 }
 
 @end

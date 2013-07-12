@@ -40,6 +40,7 @@ static RCTileGameScene* sharedInstance;
         
         //添加地图，地图锚点默认位于0，0
         self.tileMap = [CCTMXTiledMap tiledMapWithTMXFile:@"tilemap.tmx"];
+        self.tileMap.anchorPoint = ccp(0, 0);
         self.bgLayer = [self.tileMap layerNamed:@"background"];
         [self addChild:self.tileMap z:-1];
         
@@ -139,7 +140,7 @@ static RCTileGameScene* sharedInstance;
             - winSize.height);
     
     //反向移动场景坐标，显示地图区域
-    self.position = ccp(-x,-y);
+    self.tileMap.position = ccp(-x,-y);
 }
 
 /*
@@ -158,7 +159,7 @@ static RCTileGameScene* sharedInstance;
     CGPoint movedOffsetPoint = ccp(-x, -y);
     
     NSLog(@"position0:%@,offset:%@,point:%@",NSStringFromCGPoint(self.position),NSStringFromCGPoint(movedOffsetPoint),NSStringFromCGPoint(point));
-    CGPoint position = ccpAdd(self.position, movedOffsetPoint);
+    CGPoint position = ccpAdd(self.tileMap.position, movedOffsetPoint);
     NSLog(@"position1:%@",NSStringFromCGPoint(position));
     position.x = MIN(position.x, 0);
     position.y = MIN(position.y, 0);
@@ -170,7 +171,7 @@ static RCTileGameScene* sharedInstance;
                      - winSize.height));
     
     NSLog(@"position:%@",NSStringFromCGPoint(position));
-    self.position = position;
+    self.tileMap.position = position;
 }
 
 #pragma mark - Touch Event
@@ -183,6 +184,9 @@ static RCTileGameScene* sharedInstance;
 - (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event
 {
     CGPoint touchLocation = [self convertTouchToNodeSpace:touch];
+    
+    NSLog(@"touchLocation:%@",NSStringFromCGPoint(touchLocation));
+    touchLocation = ccpSub(touchLocation, self.tileMap.position);
     
     if(_mode ==0)
     {
@@ -251,18 +255,20 @@ static RCTileGameScene* sharedInstance;
             
             NSLog(@"diffPoint:%@",NSStringFromCGPoint(diffPoint));
             if((xCanMove && diffPoint.x) || (yCanMove && diffPoint.y))
+            {
                 [self moveToPointByStep:diffPoint map:self.tileMap];
+            }
         }
 
     }
     else
     {
-        CGPoint touchLocation = [self convertTouchToNodeSpace:touch];
+        //CGPoint touchLocation = [self convertTouchToNodeSpace:touch];
         
         // Create a projectile and put it at the player's location
         CCSprite *projectile = [CCSprite spriteWithFile:@"projectile.png"];
         projectile.position = _player.position;
-        [self addChild:projectile];
+        [self.tileMap addChild:projectile];
         
         // Determine where we wish to shoot the projectile to
         CGPoint targetPoint = CGPointZero;
@@ -307,7 +313,7 @@ static RCTileGameScene* sharedInstance;
 {
     CCSprite* enemy = [CCSprite spriteWithFile:@"enemy.png"];
     enemy.position = point;
-    [self addChild: enemy z:10];
+    [self.tileMap addChild: enemy z:10];
     
     [self animateEnemy:enemy];
 }
@@ -315,7 +321,7 @@ static RCTileGameScene* sharedInstance;
 - (void)projectileMoveFinished:(id)sender
 {
     CCSprite *sprite = (CCSprite *)sender;
-    [self removeChild:sprite cleanup:YES];
+    [self.tileMap removeChild:sprite cleanup:YES];
 }
 
 - (void)enemyMoveFinished:(id)sender

@@ -10,7 +10,6 @@
 #import "HelloWorldLayer.h"
 #import "RCGameScene.h"
 #import "RCMultiLayerScene.h"
-#import "RCEarthScene.h"
 #import "RCParallaxScene.h"
 #import "RCShipGameScene.h"
 #import "RCShootGameScene.h"
@@ -20,6 +19,7 @@
 #import "RCTileGameScene.h"
 #import "RCMaskScene.h"
 #import "RCJoyStickScene.h"
+#import "RCParticleScene.h"
 
 @implementation RCLoadingLayer
 
@@ -74,11 +74,6 @@
             scene = [RCMultiLayerScene scene];
             break;
         }
-        case ST_EARTH:
-        {
-            scene = [RCEarthScene scene];
-            break;
-        }
         case ST_PARALLAX:
         {
             scene = [RCParallaxScene scene];
@@ -122,6 +117,11 @@
         case ST_JOYSTICK:
         {
             scene = [RCJoyStickScene scene];
+            break;
+        }
+        case ST_PARTICLES:
+        {
+            scene = [RCParticleScene scene];
             break;
         }
         default:
