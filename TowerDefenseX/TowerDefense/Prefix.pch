@@ -1,0 +1,21 @@
+//
+// Prefix header for all source files of the 'TowerDefense' target in the 'TowerDefense' project
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+	#import <UIKit/UIKit.h>
+#endif
+
+#define SYSTEM_VERSION [[UIDevice currentDevice].systemVersion floatValue]
+
+typedef enum
+{
+    ST_UNKNOWN = 0,
+    ST_HELLOWORLD,
+    ST_GAME,
+}SCENE_TYPE;
+
+
+#define WIN_SIZE CCDirector::sharedDirector()->getWinSize()
+#define DIRECTOR CCDirector::sharedDirector()

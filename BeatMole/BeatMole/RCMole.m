@@ -17,6 +17,8 @@
     self.imageName = nil;
     self.moveUpAnimation = nil;
     self.moveDownAnimation = nil;
+    self.beatMoveDownAnimation = nil;
+    self.deadDownAnimation = nil;
     self.hpBar = nil;
     
     [super dealloc];

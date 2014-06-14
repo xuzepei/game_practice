@@ -43,4 +43,20 @@
 	[[RCShipGameScene sharedInstance] shootBulletFromShip:self];
 }
 
+- (void)setWidth:(float)width
+{
+    self.scaleX = 1;
+    // calc approp value for scaleX...
+    float newScale = (width * self.scaleX)/self.contentSize.width;
+    self.scaleX = newScale;
+}
+
+- (void)setHeight:(float)height
+{
+    self.scaleY = 1;
+    // calc approp value for scaleY...
+    float newScale = (height * self.scaleY)/self.contentSize.height;
+    self.scaleY = newScale;
+}
+
 @end

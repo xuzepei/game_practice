@@ -52,12 +52,20 @@ static RCBeatMoleScene* sharedInstance = nil;
         _showingMoleArray = [[NSMutableArray alloc] init];
         
         
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"land.plist"];
+        //地图缓存
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"lands.plist"];
+        //精灵动画缓存
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"mole_animation.plist"];
 
+        //获取关卡信息
         RCLevel* level = [RCLevel sharedInstance];
         [level updateByLevelNumber:self.levelIndex];
         self.userHP = level.userHP;
+        
+        //设置洞口
+        _positionArray = [[NSMutableArray alloc] init];
+        if([level.holeArray count])
+           [_positionArray addObjectsFromArray:level.holeArray];
         
         //返回按钮
         CCMenuItem* menuItem = [CCMenuItemImage itemWithNormalImage:@"back_button.png" selectedImage:@"back_button_selected.png" target:self selector:@selector(clickedMenuItem:)];
@@ -96,43 +104,6 @@ static RCBeatMoleScene* sharedInstance = nil;
         CCSprite* dirt = [CCSprite spriteWithSpriteFrameName:bgImageName];
         dirt.position = ccp(winSize.width/2.0, winSize.height/2.0);
         [self addChild:dirt z:-20];
-
-        //设置洞口
-        _positionArray = [[NSMutableArray alloc] init];
-        
-        CGPoint point = ccp(228/2.0, 476.0/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        point = ccp(630/2.0, 468.0/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(90/2.0, 372.0/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(438/2.0, 372.0/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(776/2.0, 372.0/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(296/2.0, 264/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(606/2.0, 264/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(190/2.0, 124/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
-        
-        
-        point = ccp(790/2.0, 118.0/2.0);
-        [_positionArray addObject:NSStringFromCGPoint(point)];
 
         //计算第一波出兵
         NSArray* moles = [self molesForWave:0];
@@ -321,7 +292,11 @@ static RCBeatMoleScene* sharedInstance = nil;
                 if(NO == isUsing)
                 {
                     NSString* pointString = [_positionArray objectAtIndex:holeIndex];
-                    mole.position = CGPointFromString(pointString);
+                    CGPoint point = CGPointFromString(pointString);
+                    point.y = point.y + 20;
+                    if([RCTool isIphone5])
+                        point.x = point.x + 50;
+                    mole.position = point;
                     [_showingHoleSet addObject:holeIndexString];
                     mole.showingHoleIndex = holeIndex;
                     mole.showTime = (self.currentWave.difficultyFactor - mole.speed)*0.1;
@@ -426,28 +401,28 @@ static RCBeatMoleScene* sharedInstance = nil;
     
     [self stop];
     
-    [RCTool saveLevelResult:self.levelIndex star:star coin:self.score hp:self.userHP rightKillCount:self.rightTapCount wrongKillCount:self.wrongTapCount continuousRightKillCount:self.continuousRightTapCount showCount:_showCount killCount:_killCount idCount:20];
+    //记录最新的关卡
+    if(star > 0)
+    {
+        [RCLevel setLastLevelIndex:MIN(9,self.levelIndex + 1)];
+    }
     
-
-    UIView* resultView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, [RCTool getScreenSize].height, [RCTool getScreenSize].width)] autorelease];
+    [RCLevel saveLevelResult:self.levelIndex star:star coin:self.score hp:self.userHP rightKillCount:self.rightTapCount wrongKillCount:self.wrongTapCount continuousRightKillCount:self.continuousRightTapCount showCount:_showCount killCount:_killCount length:20];
+    
+    RCLevelResultView* resultView = [[[RCLevelResultView alloc] initWithFrame:CGRectMake(0, 0, [RCTool getScreenSize].height, [RCTool getScreenSize].width)] autorelease];
+    resultView.delegate = self;
     resultView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
     
     RCNavigationController* navigationController = [RCTool getRootNavigationController];
     [navigationController.view addSubview:resultView];
     
-//    CGSize screenSize = WIN_SIZE;
-//    CCLabelTTF* gameOverLabel = [CCLabelTTF labelWithString:tipString fontName:@"Marker Felt" fontSize:60.0];
-//    gameOverLabel.position = ccp(screenSize.width/2, screenSize.height/2);
-//    gameOverLabel.scale = 0.1;
-//    [self addChild:gameOverLabel z:10];
-//    [gameOverLabel runAction:[CCScaleTo actionWithDuration:0.5 scale:1.0]];
     
-    self.isGameOver = YES;
 }
 
 - (void)stop
 {
     [[SimpleAudioEngine sharedEngine] stopBackgroundMusic];
+    self.isGameOver = YES;
 }
 
 - (void)clickedMenuItem:(id)sender
@@ -460,7 +435,7 @@ static RCBeatMoleScene* sharedInstance = nil;
         {
             [self stop];
             
-            CCScene* scene = [RCSelectLevelScene scene];
+            CCScene* scene = [RCSelectLevelScene scene:self.levelIndex];
             [DIRECTOR replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:scene withColor:ccWHITE]];
             
             break;
@@ -470,11 +445,13 @@ static RCBeatMoleScene* sharedInstance = nil;
             if([DIRECTOR isPaused])
             {
                 [self.pauseMenuItem setString:@"暂停"];
+                [[SimpleAudioEngine sharedEngine] resumeBackgroundMusic];
                 [DIRECTOR resume];
             }
             else
             {
                 [self.pauseMenuItem setString:@"继续"];
+                [[SimpleAudioEngine sharedEngine] pauseBackgroundMusic];
                 [DIRECTOR pause];
             }
         }
@@ -503,6 +480,7 @@ static RCBeatMoleScene* sharedInstance = nil;
             mole.beatCount += [RCUser sharedInstance].ap;
             
             BOOL beatAnimation = NO;
+            BOOL deadAnimation = NO;
             if(mole.teamType != [RCUser sharedInstance].teamType)
             {
                 if(mole.beatCount >= mole.hp)//点击足够多次，表示点击成功
@@ -514,8 +492,11 @@ static RCBeatMoleScene* sharedInstance = nil;
                     
                     [[SimpleAudioEngine sharedEngine] playEffect:@"yes.caf"];
                     mole.clickable = NO;
-                    beatAnimation = YES;
+                    
+                    deadAnimation = YES;
                 }
+                
+                beatAnimation = YES;
             }
             else
             {
@@ -532,13 +513,22 @@ static RCBeatMoleScene* sharedInstance = nil;
                 beatAnimation = YES;
             }
             
-            if(beatAnimation)
+            if(deadAnimation)
+            {
+                [mole stopAllActions];
+                
+                CCAnimate* deadDown = [CCAnimate actionWithAnimation:mole.deadDownAnimation];
+                CCCallFunc *resetAction = [CCCallFuncN actionWithTarget:self selector:@selector(reset:)];
+                [mole runAction:[CCSequence actions:deadDown,resetAction,nil]];
+            }
+            else if(beatAnimation)
             {
                 [mole stopAllActions];
 
                 CCAnimate* beatMoveDown = [CCAnimate actionWithAnimation:mole.beatMoveDownAnimation];
+                CCAnimate* moveDown = [CCAnimate actionWithAnimation:mole.moveDownAnimation];
                 CCCallFunc *resetAction = [CCCallFuncN actionWithTarget:self selector:@selector(reset:)];
-                [mole runAction:[CCSequence actions:beatMoveDown,resetAction,nil]];
+                [mole runAction:[CCSequence actions:beatMoveDown,moveDown,resetAction,nil]];
             }
         }
     }
@@ -553,6 +543,23 @@ static RCBeatMoleScene* sharedInstance = nil;
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event
 {
+}
+
+
+- (void)clickedReplayButton:(id)token
+{
+    
+}
+
+- (void)clickedShareButton:(id)token
+{
+    
+}
+
+- (void)clickedNextButton:(id)token
+{
+    CCScene* scene = [RCSelectLevelScene scene:MIN(9,self.levelIndex + 1)];
+    [DIRECTOR replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:scene withColor:ccWHITE]];
 }
 
 @end

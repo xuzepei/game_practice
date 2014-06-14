@@ -9,14 +9,15 @@
 #import "RCSelectLevelScene.h"
 #import "RCSelectTeamScene.h"
 #import "RCBeatMoleScene.h"
+#import "RCLevel.h"
 
 static RCSelectLevelScene* sharedInstance = nil;
 @implementation RCSelectLevelScene
 
-+ (id)scene
++ (id)scene:(int)levelIndex
 {
     CCScene* scene = [CCScene node];
-    RCSelectLevelScene* layer = [RCSelectLevelScene node];
+    RCSelectLevelScene* layer = [[RCSelectLevelScene alloc] initWithLevelIndex:levelIndex];
     [scene addChild:layer];
     return scene;
 }
@@ -26,51 +27,76 @@ static RCSelectLevelScene* sharedInstance = nil;
     return sharedInstance;
 }
 
-- (id)init
+- (id)initWithLevelIndex:(int)levelIndex
 {
     if(self = [super init])
     {
         sharedInstance = self;
         CGSize winSize = WIN_SIZE;
         
-        CCLayerColor* bgColorLayer = [CCLayerColor layerWithColor:ccc4(255, 255, 255, 255)];
+        CCLayerColor* bgColorLayer = [CCLayerColor layerWithColor:ccc4(255, 0, 0, 255)];
         [self addChild:bgColorLayer];
         
+        NSMutableArray* pages = [[[NSMutableArray alloc] init] autorelease];
+        
+        BOOL previousLevelPassed = YES;
+        for(int i = 0; i < 10; i++)
+        {
+            int star = 0;
+            NSDictionary* levelResult = [RCLevel getLevelResultByIndex:i];
+            if(levelResult)
+            {
+                NSString* temp = [levelResult objectForKey:@"star"];
+                if([temp length])
+                    star = [temp intValue];
+            }
+
+            NSString* normalImage = [NSString stringWithFormat:@"level_%d.png",i];
+            NSString* selectedImage = @"";
+            NSString* disabledImage = [NSString stringWithFormat:@"level_%d_selected.png",i];
+            
+            CCLayer* page = [[[CCLayer alloc] init] autorelease];
+            [page setOpacity:NOT_CURRENT_PAGE_OPACITY];
+            CCMenuItem* menuItem = [CCMenuItemImage itemWithNormalImage:normalImage selectedImage:selectedImage disabledImage:disabledImage target:self selector:@selector(clickedMenuItem:)];
+            menuItem.tag = T_SELECT_LEVEL_MENUITEM0 + i;
+            
+            if(previousLevelPassed)
+               [menuItem setIsEnabled:YES];
+            else
+               [menuItem setIsEnabled:NO];
+                
+            CCMenu* menu = [CCMenu menuWithItems:menuItem, nil];
+            menu.position = ccp(winSize.width/2, winSize.height/2);
+            [page addChild:menu];
+            
+            for(int i = 0; i < star; i++)
+            {
+                CCSprite* starSprite = [CCSprite spriteWithFile:@"star.png"];
+                starSprite.position = ccp(winSize.width/2 + i*60, winSize.height/2 - 120);
+                [page addChild: starSprite];
+            }
+
+            [pages addObject: page];
+            
+            if(star < 1)
+            {
+                previousLevelPassed = NO;
+            }
+        }
+
+        CCScrollLayer* scroller = [[CCScrollLayer alloc] initWithLayers:pages widthOffset: 100];
+        scroller.showPagesIndicator = NO;
+        [self addChild:scroller];
+        
+        [scroller moveToPage:levelIndex];
+        
+        //返回按钮
         CCMenuItem* menuItem = [CCMenuItemImage itemWithNormalImage:@"back_button.png" selectedImage:@"back_button_selected.png" target:self selector:@selector(clickedMenuItem:)];
         menuItem.anchorPoint = ccp(0,0.5);
         menuItem.tag = T_SELECT_LEVEL_BACKBUTTON;
         CCMenu* backMenu = [CCMenu menuWithItems:menuItem,nil];
         backMenu.position = ccp(10, winSize.height - menuItem.contentSize.height/2.0);
-        [self addChild:backMenu];
-        
-        CCMenuItem* menuItem0 = [CCMenuItemImage itemWithNormalImage:@"level_0.png" selectedImage:@"level_0_selected.png" target:self selector:@selector(clickedMenuItem:)];
-        menuItem0.tag = T_SELECT_LEVEL_MENUITEM0;
-        
-        CCMenuItem* menuItem1 = [CCMenuItemImage itemWithNormalImage:@"level_1.png" selectedImage:@"level_1_selected.png" target:self selector:@selector(clickedMenuItem:)];
-        menuItem1.tag = T_SELECT_LEVEL_MENUITEM1;
-        
-        CCMenuItem* menuItem2 = [CCMenuItemImage itemWithNormalImage:@"level_2.png" selectedImage:@"level_2_selected.png" target:self selector:@selector(clickedMenuItem:)];
-        menuItem2.tag = T_SELECT_LEVEL_MENUITEM2;
-        
-        CCMenuItem* menuItem3 = [CCMenuItemImage itemWithNormalImage:@"level_3.png" selectedImage:@"level_3_selected.png" target:self selector:@selector(clickedMenuItem:)];
-        menuItem3.tag = T_SELECT_LEVEL_MENUITEM3;
-        
-        CCMenuItem* menuItem4 = [CCMenuItemImage itemWithNormalImage:@"level_4.png" selectedImage:@"level_4_selected.png" target:self selector:@selector(clickedMenuItem:)];
-        menuItem4.tag = T_SELECT_LEVEL_MENUITEM4;
-        
-        CCMenuItem* menuItem5 = [CCMenuItemImage itemWithNormalImage:@"level_5.png" selectedImage:@"level_5_selected.png" target:self selector:@selector(clickedMenuItem:)];
-        menuItem5.tag = T_SELECT_LEVEL_MENUITEM5;
-        
-        
-        CCMenu* menuLine0 = [CCMenu menuWithItems:menuItem0,menuItem1,menuItem2,nil];
-        [menuLine0 alignItemsHorizontallyWithPadding:60];
-        menuLine0.position = ccp(winSize.width/2.0, winSize.height/2.0 + menuItem.contentSize.height);
-        [self addChild:menuLine0];
-        
-        CCMenu* menuLine1 = [CCMenu menuWithItems:menuItem3,menuItem4,menuItem5,nil];
-        [menuLine1 alignItemsHorizontallyWithPadding:60];
-        menuLine1.position = ccp(winSize.width/2.0, winSize.height/2.0 - menuItem.contentSize.height);
-        [self addChild:menuLine1];
+        [self addChild:backMenu z:10];
         
     }
     

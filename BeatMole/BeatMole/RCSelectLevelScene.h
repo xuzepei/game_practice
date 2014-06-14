@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
+#import "CCScrollLayer.h"
+#import "CCLayer+CCLayer_Opaque.h"
 
-@interface RCSelectLevelScene : CCLayer {
+@interface RCSelectLevelScene : CCLayer<CCScrollLayerDelegate> {
     
 }
 
-+ (id)scene;
++ (id)scene:(int)levelIndex;
 + (RCSelectLevelScene*)sharedInstance;
 
 @end

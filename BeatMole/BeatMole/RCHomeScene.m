@@ -48,44 +48,35 @@ static RCHomeScene* sharedInstance = nil;
         
         //设置菜单
         //左菜单
-        CGFloat fontSize = 16;
-        CCLabelTTF* textlabel = [CCLabelTTF labelWithString:@"关卡模式" fontName:@"Helvetica-Bold" fontSize:fontSize];
-        CCMenuItem* menuItem0 = [CCMenuItemLabel itemWithLabel:textlabel target:self selector:@selector(clickedMenuItem:)];
-        menuItem0.anchorPoint = CGPointMake(0, 0.5);
-        //menuItem0 = ccp(10, 200);
+        CCMenuItemImage* menuItem0 = [CCMenuItemImage itemWithNormalImage:@"home_menu_level_model.png" selectedImage:@"home_menu_level_model_selected.png" target:self selector:@selector(clickedMenuItem:)];
         menuItem0.tag = T_HOMEMENUITEM0;
         
-        textlabel = [CCLabelTTF labelWithString:@"挑战模式" fontName:@"Helvetica-Bold" fontSize:fontSize];
-        CCMenuItem* menuItem1 = [CCMenuItemLabel itemWithLabel:textlabel target:self selector:@selector(clickedMenuItem:)];
-        menuItem1.anchorPoint = CGPointMake(0, 0.5);
+        CCMenuItemImage* menuItem1 = [CCMenuItemImage itemWithNormalImage:@"home_menu_challenge_model.png" selectedImage:@"home_menu_challenge_model_selected.png"
+            disabledImage:@"home_menu_challenge_model_disabled.png" target:self selector:@selector(clickedMenuItem:)];
         menuItem1.tag = T_HOMEMENUITEM1;
         
         CCMenu* leftMenu = [CCMenu menuWithItems:menuItem0,menuItem1,nil];
-        [leftMenu alignItemsVerticallyWithPadding:30];
-        leftMenu.position = ccp(10, 220);
+        [leftMenu alignItemsVerticallyWithPadding:24.0];
+        leftMenu.position = ccp(68, 182);
         [self addChild:leftMenu];
         
-        //右菜单
-        
-        fontSize = 14;
-        textlabel = [CCLabelTTF labelWithString:@"排行" fontName:@"Helvetica-Bold" fontSize:fontSize];
-        CCMenuItem* menuItem2 = [CCMenuItemLabel itemWithLabel:textlabel target:self selector:@selector(clickedMenuItem:)];
-        menuItem2.anchorPoint = CGPointMake(0, 0.5);
+        //顶部
+        CCMenuItem* menuItem2 = [CCMenuItemImage itemWithNormalImage:@"home_menu_toplist.png" selectedImage:@"home_menu_toplist_selected.png" target:self selector:@selector(clickedMenuItem:)];
         menuItem2.tag = T_HOMEMENUITEM2;
+        CCMenu* topMenu = [CCMenu menuWithItems:menuItem2,nil];
+        topMenu.position = ccp(30, 290);
+        [self addChild:topMenu];
         
-        textlabel = [CCLabelTTF labelWithString:@"关于" fontName:@"Helvetica-Bold" fontSize:fontSize];
-        CCMenuItem* menuItem3 = [CCMenuItemLabel itemWithLabel:textlabel target:self selector:@selector(clickedMenuItem:)];
-        menuItem3.anchorPoint = CGPointMake(0, 0.5);
+
+        CCMenuItem* menuItem3 = [CCMenuItemImage itemWithNormalImage:@"home_menu_about.png" selectedImage:@"home_menu_about_selected.png" target:self selector:@selector(clickedMenuItem:)];
         menuItem3.tag = T_HOMEMENUITEM3;
         
-        textlabel = [CCLabelTTF labelWithString:@"设置" fontName:@"Helvetica-Bold" fontSize:fontSize];
-        CCMenuItem* menuItem4 = [CCMenuItemLabel itemWithLabel:textlabel target:self selector:@selector(clickedMenuItem:)];
-        menuItem4.anchorPoint = CGPointMake(0, 0.5);
+        CCMenuItem* menuItem4 = [CCMenuItemImage itemWithNormalImage:@"home_menu_setting.png" selectedImage:@"home_menu_setting_selected.png" target:self selector:@selector(clickedMenuItem:)];
         menuItem4.tag = T_HOMEMENUITEM4;
         
-        CCMenu* rightMenu = [CCMenu menuWithItems:menuItem2,menuItem3,menuItem4,nil];
-        [rightMenu alignItemsVerticallyWithPadding:20];
-        rightMenu.position = ccp(winSize.width - menuItem4.contentSize.width - 10, 80);
+        CCMenu* rightMenu = [CCMenu menuWithItems:menuItem4,menuItem3,nil];
+        [rightMenu alignItemsHorizontallyWithPadding:12];
+        rightMenu.position = ccp(170, 25);
         [self addChild:rightMenu];
 
     }

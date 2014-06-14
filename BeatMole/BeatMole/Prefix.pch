@@ -85,3 +85,6 @@ typedef enum{
 
 //ios版本
 #define SYSTEM_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
+
+//非当前选择页的不透明度
+#define NOT_CURRENT_PAGE_OPACITY 150

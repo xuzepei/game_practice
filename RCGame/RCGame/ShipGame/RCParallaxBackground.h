@@ -13,9 +13,9 @@
 }
 
 @property(nonatomic,retain)CCSpriteBatchNode* batch;
-@property(assign)int spritesNum;
-@property(assign)CCArray* speedFactors;
+@property(nonatomic,retain)CCArray* speedFactors;
 @property(assign)float scrollSpeed;
+@property(assign)int spritesNum;
 @property(assign)CGSize screenSize;
 
 @end

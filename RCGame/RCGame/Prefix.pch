@@ -37,6 +37,7 @@ typedef enum
     ST_MASK,
     ST_JOYSTICK,
     ST_PARTICLES,
+    ST_CATJUMP
 }SCENE_TYPE;
 
 typedef enum

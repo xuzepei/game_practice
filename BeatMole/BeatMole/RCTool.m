@@ -160,67 +160,6 @@
 	return NO;
 }
 
-+ (NSArray*)getMolesByTeamType:(TEAM_TYPE)type
-{
-    NSMutableArray* moles = [[[NSMutableArray alloc] init] autorelease];
-    
-    NSString* name = [NSString stringWithFormat:@"mole_config_team_%d",type];
-    
-    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
-    
-    NSArray* array = [NSArray arrayWithContentsOfFile:path];
-    for(NSDictionary* dict in array)
-    {
-        NSString* id = [dict objectForKey:@"id"];
-        NSString* name = [dict objectForKey:@"name"];
-        //NSString* imageName = [dict objectForKey:@"imageName"];
-        NSString* type = [dict objectForKey:@"type"];
-        NSString* hp = [dict objectForKey:@"hp"];
-        NSString* showTime = [dict objectForKey:@"showTime"];
-        NSString* coin = [dict objectForKey:@"coin"];
-        NSString* penalty = [dict objectForKey:@"penalty"];
-        NSString* teamType = [dict objectForKey:@"teamType"];
-        NSString* speed = [dict objectForKey:@"speed"];
-        
-        if([teamType length] && [type length])
-        {
-            NSString* frameName = [NSString stringWithFormat:@"mole_%@_0.png",id];
-
-            RCMole* mole = [RCMole spriteWithSpriteFrameName:frameName];
-            mole.id = [id intValue];
-            mole.showingHoleIndex = -1;
-            mole.anchorPoint = ccp(0.5,0);
-            mole.name = name;
-            mole.imageName = frameName;
-            mole.type = [type intValue];
-            mole.hp = [hp intValue];
-            mole.showTime = [showTime intValue];
-            mole.coin = [coin intValue];
-            mole.penalty = [penalty intValue];
-            mole.teamType = [teamType intValue];
-            mole.speed = [speed intValue];
-            [mole addHPBar];
-            
-            
-            NSArray* indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",nil];
-            frameName = [NSString stringWithFormat:@"mole_%d_",mole.id];
-            mole.moveUpAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-            
-            indexArray = [NSArray arrayWithObjects:@"4",@"3",@"2",@"1",@"0",nil];
-            frameName = [NSString stringWithFormat:@"mole_%d_",mole.id];
-            mole.moveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-            
-            indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",nil];
-            frameName = [NSString stringWithFormat:@"mole_beat_%d_",mole.id];
-            mole.beatMoveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-            
-            [moles addObject: mole];
-        }
-    }
-    
-    return moles;
-}
-
 + (RCMole*)getMoleByTeamType:(TEAM_TYPE)teamType moleType:(NSString*)moleType
 {
     if(0 == [moleType length])
@@ -248,10 +187,11 @@
         {
             NSString* frameName = [NSString stringWithFormat:@"mole_%@_0.png",id];
             
+            NSLog(@"mole_frame_name:%@",frameName);
             RCMole* mole = [RCMole spriteWithSpriteFrameName:frameName];
             mole.id = [id intValue];
             mole.showingHoleIndex = -1;
-            mole.anchorPoint = ccp(0.5,0);
+            mole.anchorPoint = ccp(0.5,0.5);
             mole.name = name;
             mole.imageName = frameName;
             mole.type = [type intValue];
@@ -264,18 +204,22 @@
             [mole addHPBar];
             
             
-            NSArray* indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",nil];
+            NSArray* indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"9",nil];
             frameName = [NSString stringWithFormat:@"mole_%d_",mole.id];
             mole.moveUpAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
             
-            indexArray = [NSArray arrayWithObjects:@"4",@"3",@"2",@"1",@"0",nil];
+            indexArray = [NSArray arrayWithObjects:@"10",@"11",@"12",@"13",@"14",@"15",@"16",@"0",nil];
             frameName = [NSString stringWithFormat:@"mole_%d_",mole.id];
             mole.moveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
             
-            indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",nil];
+            indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",nil];
             frameName = [NSString stringWithFormat:@"mole_beat_%d_",mole.id];
             mole.beatMoveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
             
+            indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"4",nil];
+            frameName = [NSString stringWithFormat:@"mole_dead_%d_",mole.id];
+            mole.deadDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
+
             return mole;
         }
     }
@@ -283,126 +227,10 @@
     return nil;
 }
 
-+ (RCMole*)getMoleById:(NSString*)moleId
-{
-    if(0 == [moleId length])
-        return nil;
-    
-    NSArray* teamArray = [NSArray arrayWithObjects:@"0",@"1",nil];
-    for(NSString* teamType in teamArray)
-    {
-        NSString* name = [NSString stringWithFormat:@"mole_config_team_%d",[teamType intValue]];
-        
-        NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
-        NSArray* array = [NSArray arrayWithContentsOfFile:path];
-        for(NSDictionary* dict in array)
-        {
-            NSString* id = [dict objectForKey:@"id"];
-            if(NO == [id isEqualToString:moleId])
-                continue;
-            
-            NSString* name = [dict objectForKey:@"name"];
-            NSString* type = [dict objectForKey:@"type"];
-            NSString* hp = [dict objectForKey:@"hp"];
-            NSString* showTime = [dict objectForKey:@"showTime"];
-            NSString* coin = [dict objectForKey:@"coin"];
-            NSString* penalty = [dict objectForKey:@"penalty"];
-            teamType = [dict objectForKey:@"teamType"];
-            NSString* speed = [dict objectForKey:@"speed"];
-            
-            if([teamType length] && [type length])
-            {
-                NSString* frameName = [NSString stringWithFormat:@"mole_%@_0.png",id];
-                
-                RCMole* mole = [RCMole spriteWithSpriteFrameName:frameName];
-                mole.id = [id intValue];
-                mole.showingHoleIndex = -1;
-                mole.anchorPoint = ccp(0.5,0);
-                mole.name = name;
-                mole.imageName = frameName;
-                mole.type = [type intValue];
-                mole.hp = [hp intValue];
-                mole.showTime = [showTime intValue];
-                mole.coin = [coin intValue];
-                mole.penalty = [penalty intValue];
-                mole.teamType = [teamType intValue];
-                mole.speed = [speed intValue];
-                [mole addHPBar];
-                
-                
-                NSArray* indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",nil];
-                frameName = [NSString stringWithFormat:@"mole_%d_",mole.id];
-                mole.moveUpAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-                
-                indexArray = [NSArray arrayWithObjects:@"4",@"3",@"2",@"1",@"0",nil];
-                frameName = [NSString stringWithFormat:@"mole_%d_",mole.id];
-                mole.moveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-                
-                indexArray = [NSArray arrayWithObjects:@"0",@"1",@"2",@"3",nil];
-                frameName = [NSString stringWithFormat:@"mole_beat_%d_",mole.id];
-                mole.beatMoveDownAnimation = [CCAnimation animationWithFrame:frameName indexArray:indexArray delay:0.1];
-                
-                return mole;
-            }
-        }
-    }
-
-    return nil;
-}
-
 + (RCNavigationController*)getRootNavigationController
 {
     AppController* appDelegate =(AppController*)[UIApplication sharedApplication].delegate;
     return appDelegate.navigationController;
-}
-
-+ (void)saveLevelResult:(int)levelIndex
-                   star:(int)star
-                   coin:(int)coin
-                     hp:(int)hp
-         rightKillCount:(int)rightKillCount
-         wrongKillCount:(int)wrongKillCount
-continuousRightKillCount:(int)continuousRightKillCount
-              showCount:(int*)showCount
-              killCount:(int*)killCount
-                idCount:(int)idCount
-{
-    NSMutableDictionary* result = [[[NSMutableDictionary alloc] init] autorelease];
-    
-    [result setObject:[NSString stringWithFormat:@"%d",coin] forKey:@"coin"];
-    [result setObject:[NSString stringWithFormat:@"%d",star] forKey:@"star"];
-    [result setObject:[NSString stringWithFormat:@"%d",hp] forKey:@"hp"];
-    [result setObject:[NSString stringWithFormat:@"%d",rightKillCount] forKey:@"rightKillCount"];
-    [result setObject:[NSString stringWithFormat:@"%d",wrongKillCount] forKey:@"wrongKillCount"];
-    [result setObject:[NSString stringWithFormat:@"%d",continuousRightKillCount] forKey:@"continuousRightKillCount"];
-    
-    NSMutableArray* showCountArray = [[NSMutableArray alloc] init];
-    for(int i = 0; i < idCount; i++)
-    {
-        [showCountArray addObject:[NSString stringWithFormat:@"%d",showCount[i]]];
-    }
-    
-    [result setObject:showCountArray forKey:@"showCount"];
-    [showCountArray release];
-    
-    NSMutableArray* killCountArray = [[NSMutableArray alloc] init];
-    for(int i = 0; i < idCount; i++)
-    {
-        [killCountArray addObject:[NSString stringWithFormat:@"%d",killCount[i]]];
-    }
-    
-    [result setObject:killCountArray forKey:@"killCount"];
-    [killCountArray release];
-    
-    NSString* path = [NSString stringWithFormat:@"%@/level_result_%d",[RCTool getUserDocumentDirectoryPath],levelIndex];
-    [result writeToFile:path atomically:YES];
-}
-
-+ (NSDictionary*)getLevelResultByIndex:(int)levelIndex
-{
-    NSString* path = [NSString stringWithFormat:@"%@/level_result_%d",[RCTool getUserDocumentDirectoryPath],levelIndex];
-    
-    return [NSDictionary dictionaryWithContentsOfFile:path];
 }
 
 @end

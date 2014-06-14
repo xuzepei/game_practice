@@ -10,6 +10,7 @@
 #import "RCUser.h"
 #import "RCHomeScene.h"
 #import "RCSelectLevelScene.h"
+#import "RCLevel.h"
 
 static RCSelectTeamScene* sharedInstance = nil;
 @implementation RCSelectTeamScene
@@ -76,7 +77,7 @@ static RCSelectTeamScene* sharedInstance = nil;
         {
             [RCUser sharedInstance].teamType = TT_RED;
             
-            CCScene* scene = [RCSelectLevelScene scene];
+            CCScene* scene = [RCSelectLevelScene scene:[RCLevel getLastLevelIndex]];
             [DIRECTOR replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:scene withColor:ccWHITE]];
             
             break;
@@ -85,7 +86,7 @@ static RCSelectTeamScene* sharedInstance = nil;
         {
             [RCUser sharedInstance].teamType = TT_BLUE;
             
-            CCScene* scene = [RCSelectLevelScene scene];
+            CCScene* scene = [RCSelectLevelScene scene:[RCLevel getLastLevelIndex]];
             [DIRECTOR replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:scene withColor:ccWHITE]];
             
             break;

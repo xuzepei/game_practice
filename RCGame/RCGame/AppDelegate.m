@@ -132,7 +132,10 @@
     //[director_ runWithScene:[RCLoadingLayer goToScene:ST_JOYSTICK]];
     
     //Particles
-    [director_ runWithScene:[RCLoadingLayer goToScene:ST_PARTICLES]];
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_PARTICLES]];
+    
+    //Test CocosBuilder
+    //[director_ runWithScene:[RCLoadingLayer goToScene:ST_CATJUMP]];
 	
 	return YES;
 }

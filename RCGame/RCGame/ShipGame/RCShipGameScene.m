@@ -42,7 +42,11 @@ static RCShipGameScene* sharedInstance = nil;
         RCParallaxBackground* parallaxbg = [RCParallaxBackground node];
 		[self addChild:parallaxbg z:-1];
         
+        return self;
+        
         RCShip* ship = [RCShip ship];
+//        [ship setWidth:60];
+//        [ship setHeight:40];
 		ship.position = CGPointMake(80, screenSize.height / 2);
 		[self addChild:ship z:10];
         

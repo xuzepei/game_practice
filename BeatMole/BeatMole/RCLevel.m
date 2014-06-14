@@ -8,6 +8,7 @@
 
 #import "RCLevel.h"
 #import "RCWave.h"
+#import "RCTool.h"
 
 @implementation RCLevel
 
@@ -29,11 +30,85 @@
     return sharedInstance;
 }
 
++ (void)saveLevelResult:(int)levelIndex
+                   star:(int)star
+                   coin:(int)coin
+                     hp:(int)hp
+         rightKillCount:(int)rightKillCount
+         wrongKillCount:(int)wrongKillCount
+continuousRightKillCount:(int)continuousRightKillCount
+              showCount:(int*)showCount
+              killCount:(int*)killCount
+                length:(int)length
+{
+    NSDictionary* lastResult = [RCLevel getLevelResultByIndex:levelIndex];
+    if(lastResult)
+    {
+        int lastStar = [[lastResult objectForKey:@"star"] intValue];
+        if(lastStar > star)
+            star = lastStar;
+    }
+    
+    NSMutableDictionary* result = [[[NSMutableDictionary alloc] init] autorelease];
+    
+    [result setObject:[NSString stringWithFormat:@"%d",coin] forKey:@"coin"];
+    [result setObject:[NSString stringWithFormat:@"%d",star] forKey:@"star"];
+    [result setObject:[NSString stringWithFormat:@"%d",hp] forKey:@"hp"];
+    [result setObject:[NSString stringWithFormat:@"%d",rightKillCount] forKey:@"rightKillCount"];
+    [result setObject:[NSString stringWithFormat:@"%d",wrongKillCount] forKey:@"wrongKillCount"];
+    [result setObject:[NSString stringWithFormat:@"%d",continuousRightKillCount] forKey:@"continuousRightKillCount"];
+    
+    NSMutableArray* showCountArray = [[NSMutableArray alloc] init];
+    for(int i = 0; i < length; i++)
+    {
+        [showCountArray addObject:[NSString stringWithFormat:@"%d",showCount[i]]];
+    }
+    
+    [result setObject:showCountArray forKey:@"showCount"];
+    [showCountArray release];
+    
+    NSMutableArray* killCountArray = [[NSMutableArray alloc] init];
+    for(int i = 0; i < length; i++)
+    {
+        [killCountArray addObject:[NSString stringWithFormat:@"%d",killCount[i]]];
+    }
+    
+    [result setObject:killCountArray forKey:@"killCount"];
+    [killCountArray release];
+    
+    NSString* path = [NSString stringWithFormat:@"%@/level_result_%d",[RCTool getUserDocumentDirectoryPath],levelIndex];
+    [result writeToFile:path atomically:YES];
+}
+
++ (NSDictionary*)getLevelResultByIndex:(int)levelIndex
+{
+    NSString* path = [NSString stringWithFormat:@"%@/level_result_%d",[RCTool getUserDocumentDirectoryPath],levelIndex];
+    
+    return [NSDictionary dictionaryWithContentsOfFile:path];
+}
+
++ (void)setLastLevelIndex:(int)levelIndex
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:levelIndex forKey:@"lastLevelIndex"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (int)getLastLevelIndex
+{
+    NSNumber* number = [[NSUserDefaults standardUserDefaults] objectForKey:@"lastLevelIndex"];
+    
+    if(number)
+        return [number intValue];
+    
+    return 0;
+}
+
 - (id)init
 {
     if(self = [super init])
     {
         _waveArray = [[NSMutableArray alloc] init];
+        _holeArray = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -42,6 +117,7 @@
 - (void)dealloc
 {
     self.waveArray = nil;
+    self.holeArray = nil;
     
     [super dealloc];
 }
@@ -55,6 +131,7 @@
         return;
     
     [_waveArray removeAllObjects];
+    [_holeArray removeAllObjects];
     
     self.userHP = [[levelInfo objectForKey:@"userHP"] intValue];
     self.starLevel0 = [[levelInfo objectForKey:@"starLevel0"] intValue];
@@ -75,6 +152,15 @@
             [_waveArray addObject:wave];
         }
     }
+    
+    NSArray* holes = [levelInfo objectForKey:@"holes"];
+    if(holes && [holes isKindOfClass:[NSArray class]])
+    {
+        [_holeArray addObjectsFromArray:holes];
+    }
 }
+
+
+
 
 @end

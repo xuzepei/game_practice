@@ -144,5 +144,17 @@
 			</array>
 		</dict>
 	</array>
+	<key>holes</key>
+	<array>
+		<string>{228/2.0, 476.0/2.0}</string>
+		<string>{630/2.0, 468.0/2.0}</string>
+		<string>{90/2.0, 372.0/2.0}</string>
+		<string>{438/2.0, 372.0/2.0}</string>
+		<string>{776/2.0, 372.0/2.0}</string>
+		<string>{296/2.0, 264/2.0}</string>
+		<string>{606/2.0, 264/2.0}</string>
+		<string>{190/2.0, 124/2.0}</string>
+		<string>{790/2.0, 118.0/2.0}</string>
+	</array>
 </dict>
 </plist>

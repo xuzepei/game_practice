@@ -87,10 +87,10 @@
 		pos.x -= _scrollSpeed * [factor floatValue];
 		
 		// Reposition stripes when they're out of bounds
-//		if (pos.x < -_screenSize.width)
-//		{
-//			pos.x += (_screenSize.width * 2) - 2;
-//		}
+		if (pos.x < -_screenSize.width)
+		{
+			pos.x += (_screenSize.width * 2) - 2;
+		}
 		
 		sprite.position = pos;
 	}

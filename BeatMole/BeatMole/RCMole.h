@@ -31,6 +31,7 @@
 @property(nonatomic,retain)CCAnimation* moveUpAnimation;
 @property(nonatomic,retain)CCAnimation* moveDownAnimation;
 @property(nonatomic,retain)CCAnimation* beatMoveDownAnimation;
+@property(nonatomic,retain)CCAnimation* deadDownAnimation;
 
 
 - (void)addHPBar;

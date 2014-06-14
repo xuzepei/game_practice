@@ -14,5 +14,7 @@
 }
 
 + (id)ship;
+- (void)setWidth:(float)width;
+- (void)setHeight:(float)height;
 
 @end

@@ -10,6 +10,16 @@
 	<string>825</string>
 	<key>userHP</key>
 	<string>5</string>
+	<key>holes</key>
+	<array>
+		<string>{102,50}</string>
+		<string>{391,62}</string>
+		<string>{205,146}</string>
+		<string>{327, 171}</string>
+		<string>{67, 243}</string>
+		<string>{369, 273}</string>
+		<string>{250, 258}</string>
+	</array>
 	<key>waves</key>
 	<array>
 		<dict>

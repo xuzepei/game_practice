@@ -20,6 +20,7 @@
 #import "RCMaskScene.h"
 #import "RCJoyStickScene.h"
 #import "RCParticleScene.h"
+#import "CCBReader.h"
 
 @implementation RCLoadingLayer
 
@@ -122,6 +123,11 @@
         case ST_PARTICLES:
         {
             scene = [RCParticleScene scene];
+            break;
+        }
+        case ST_CATJUMP:
+        {
+            scene = [CCBReader sceneWithNodeGraphFromFile:@"MainMenuScene.ccbi"];
             break;
         }
         default:
